@@ -11,8 +11,8 @@ date_default_timezone_set('Asia/Singapore');
 // Connecting to mysql
 if(!isset($_SESSION['conn'])) {
 	$host = "localhost";
-	$username = "shenlin";
-	$password = "shenlin921002";
+	$username = "root";
+	$password = "";
 	$dbname = "cs2102";
 
 	$_SESSION['conn'] = new mysqli($host,$username,$password,$dbname);
@@ -34,8 +34,8 @@ function login($user, $pwd) {
 // Prepare statement to match user and password from the database
 
 	$host = "localhost";
-	$username = "shenlin";
-	$password = "shenlin921002";
+	$username = "root";
+	$password = "";
 	$dbname = "cs2102";
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
@@ -74,8 +74,8 @@ function retrieveUser($user) {
 // User: Function to retrieve current user
 
 	$host = "localhost";
-	$username = "shenlin";
-	$password = "shenlin921002";
+	$username = "root";
+	$password = "";
 	$dbname = "cs2102";
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
@@ -89,8 +89,8 @@ function retrieveUserItems($user) {
 // User: Function to retrieve all items of the user
 
 	$host = "localhost";
-	$username = "shenlin";
-	$password = "shenlin921002";
+	$username = "root";
+	$password = "";
 	$dbname = "cs2102";
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
@@ -105,8 +105,8 @@ function deleteUserItem($item_id) {
 		// Admin: Function to delete the camera
 
 	$host = "localhost";
-	$username = "shenlin";
-	$password = "shenlin921002";
+	$username = "root";
+	$password = "";
 	$dbname = "cs2102";
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
@@ -120,8 +120,8 @@ function deleteUserItem($item_id) {
 
 function addUserItem($item_title,$item_description,$item_availability){
 	$host = "localhost";
-	$username = "shenlin";
-	$password = "shenlin921002";
+	$username = "root";
+	$password = "";
 	$dbname = "cs2102";
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
