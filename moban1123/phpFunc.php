@@ -74,6 +74,29 @@ function logout() {
 
 ################## My items ####################
 
+function addUser($user_name, $email, $phone, $password, $address) {
+// User: Function to add new user
+
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$user_date_joined = date('Y-m-d H:i:s');
+	$points = 500;
+
+	$query = "INSERT INTO USERS (user_name, email, phone, password, points, address, date_joined) VALUES (?,?,?,?, $points,?, ('$user_date_joined'))";
+
+	$stmt = $mysqli->prepare($query);
+	$stmt->bind_param("sssss", $user_name, $email, $phone, $password, $address);
+	$stmt->execute();
+	$stmt->close();
+	$result = $mysqli->affected_rows;
+	return $result;
+}
+
 function retrieveUser($user) {
 // User: Function to retrieve current user
 

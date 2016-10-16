@@ -2,16 +2,26 @@
 	# php logic file
 include('phpFunc.php');
 
-logout();
+if(isset($_POST['Username'])) {
 
+	# User trying to sign up.
+	$result = addUser($_POST['Username'], $_POST['Email'], $_POST['Phone'], $_POST['Pwd'], $_POST['Address']);
+
+	if($result==0) {
+		$errMes = 'Please try again.';}
+	else {
+ 		$_SESSION["signup"] = $result;}
+
+}
   # html <HEAD>, starts <BODY> and top menu of page
 include('header.php');
 ?>
 
+
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Login</title>
+<title>Sign up</title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all">
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="js/jquery-1.11.0.min.js"></script>
@@ -62,30 +72,51 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </head>
 <body>
 
-
-<!--log in start here-->
-<div class="login">
+<!--sign in start here-->
+<div class="signin">
 	<div class="container">
 		<div class="signin-main">
-			<h1>Log out</h1>
-			<div class="alert alert-info">
-				<h4>Logout Successfully!</h4><!-- Message -->
-				<?php echo 'Click <a href="login.php">here to login</a> again'; ?>
-			</div>
+			<h1>Sign up</h1>
+<!-- 			<h2>Informations</h2>
+ -->			<form action="" method="POST">
+				<?php if(isset($_SESSION["signup"])) { ?>
+				<div class="alert alert-info">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<h4>Signup Successfully</h4><!-- Message -->
+					<?php echo 'Click <a href="login.php">here to login</a>'; ?>
+				</div>
+				<?php
+
+				} else { ?>
+				<h2>Informations</h2>
+				<input type="text" placeholder="Username" id="Username" name="Username" required>
+				<input type="text" class="no-margin" placeholder="Email" id="Email" name="Email" required>
+				<input type="text" placeholder="Phone" id="Phone" name="Phone" required>
+				<input type="text" class="no-margin" placeholder="Address" id="Address" name="Address" required>
+				<input type="password" placeholder="Password" id="Password" name="Pwd" required=""/>
+				<input type="password" class="no-margin" placeholder="Confirm Password" required=""/>
+				<span class="checkbox1">
+				 <label class="checkbox"><input type="checkbox" name="" checked=""><i> </i>i agree terms of use and privacy</label>
+			   </span>
+				<input type="submit" value="Submit" name = "addUser" href="login.php">
+				<?php }?>
+
+			</form>
+
+			<?php if(isset($errMes)) {?>
+				<div class="alert alert-error">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<h4>Login Failed</h4><!-- Message -->
+					<?php echo $errMes; ?>
+				</div>
+			<?php }?>
 		</div>
 	</div>
 </div>
-<!--log in end here-->
+<!--sign in end here
 <!--footer strat here-->
 <div class="footer">
-
 </div>
 <!--footer end here-->
 </body>
 </html>
-
-
-<?php
-  # closes the <BODY> and include scripts
-	include('footer.php');
-?>
