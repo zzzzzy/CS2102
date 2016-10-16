@@ -212,18 +212,29 @@ function availableItems($user){
 
 }
 
-function addAuction($start_time, $end_time, $pick_up, $min_price, $time_created, $time_ended, $product_id){
+function addAuction($date_range, $pick_up, $min_price, $product_id){
 	$host = "localhost";
 	$username = "root";
 	$password = "";
 	$dbname = "cs2102";
 
+	//$start_time = $start_time.toISOString().substring(0, 10);
+	//$end_time = $end_time.toISOString().substring(0, 10);
+
+	$string = explode('-',$date_range);
+
+	$starttimestamp = strtotime($string[0]);
+	$start_time = date("Y-m-d H:i:s", $starttimestamp);
+
+	$endtimestamp = strtotime($string[1]);
+	$end_time = date("Y-m-d H:i:s", $endtimestamp);
+
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query = "INSERT INTO AUCTIONS (start_time_avail, end_time_avail, pick_up, min_price, time_created, time_ended, product_id, status) VALUES (?,?,?,?,?,?,?,True)";
+	$query = "INSERT INTO AUCTIONS (start_time_avail, end_time_avail, pick_up, min_price, product_id, status) VALUES (?,?,?,?,?,True)";
 
 	$stmt = $mysqli->prepare($query);
-	$stmt->bind_param("sssissi", $start_time, $end_time, $pick_up, $min_price, $time_created, $time_ended, $product_id);
+	$stmt->bind_param("sssii", $start_time, $end_time, $pick_up, $min_price, $product_id);
 	$stmt->execute();
 	$stmt->close();
 	$result = $mysqli->affected_rows;
@@ -353,7 +364,7 @@ function retrieveAvailProducts() {
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query = "SELECT a.*, p.title FROM AUCTIONS a, PRODUCTS p WHERE a.product_id = p.product_id AND p.is_available =True";
+	$query = "SELECT a.*, p.*, u.* FROM AUCTIONS a, PRODUCTS p, USERS u WHERE a.product_id = p.product_id AND p.is_available =True AND p.owner_id = u.user_id";
 	$result = mysqli_query($mysqli, $query);
 	return $result;
 }
