@@ -305,7 +305,7 @@ function addBids($auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bi
 	$bid_bidderid = $_SESSION['user'];
 	$bid_time_created = date('Y-m-d H:i:s');
 
-	$query = "INSERT INTO BIDS (auctions, bidder_id, product_id, points, time_created, borrow_time, return_time, pickup) VALUES (?, $bid_bidderid, ?, ?, $bid_time_created, ?, ?, ?)";
+	$query = "INSERT INTO BIDS (auctions, bidder_id, product_id, points, time_created, borrow_time, return_time, pickup) VALUES (?, $bid_bidderid, ?, ?, ('$bid_time_created'), ?, ?, ?)";
 
 	$stmt = $mysqli->prepare($query);
 	$stmt->bind_param("iiisss", $auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bid_return_time,$bid_pickup);
@@ -326,7 +326,7 @@ function retrieveAvailProducts() {
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query = "SELECT a.*, p.title FROM AUCTIONS a, PRODUCT p WHERE a.product_id = p.product_id AND p.is_available =True";
+	$query = "SELECT a.*, p.title FROM AUCTIONS a, PRODUCTS p WHERE a.product_id = p.product_id AND p.is_available =True";
 	$result = mysqli_query($mysqli, $query);
 	return $result;
 }
