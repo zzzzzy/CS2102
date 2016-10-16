@@ -309,11 +309,19 @@ function deleteBid($bid_id) {
 	return $result;
 }
 
-function addBids($auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bid_return_time,$bid_pickup){
+function addBids($auction_id, $bid_product_id, $bid_points, $date_range, $bid_pickup){
 	$host = "localhost";
 	$username = "root";
 	$password = "";
 	$dbname = "cs2102";
+
+	$string = explode('-',$date_range);
+
+	$starttimestamp = strtotime($string[0]);
+	$start_time = date("Y-m-d H:i:s", $starttimestamp);
+
+	$endtimestamp = strtotime($string[1]);
+	$end_time = date("Y-m-d H:i:s", $endtimestamp);
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
@@ -323,7 +331,7 @@ function addBids($auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bi
 	$query = "INSERT INTO BIDS (auctions, bidder_id, product_id, points, time_created, borrow_time, return_time, pickup) VALUES (?, $bid_bidderid, ?, ?, ('$bid_time_created'), ?, ?, ?)";
 
 	$stmt = $mysqli->prepare($query);
-	$stmt->bind_param("iiisss", $auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bid_return_time,$bid_pickup);
+	$stmt->bind_param("iiisss", $auction_id, $bid_product_id, $bid_points, $start_time,$end_time,$bid_pickup);
 	$stmt->execute();
 	$stmt->close();
 	$result = $mysqli->affected_rows;
