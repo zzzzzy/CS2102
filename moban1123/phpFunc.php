@@ -332,6 +332,47 @@ function deleteBid($bid_id) {
 	return $result;
 }
 
+
+################## All Products ####################
+
+function retrieveAvailProducts() {
+
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query = "SELECT a.*, p.*, u.* FROM AUCTIONS a, PRODUCTS p, USERS u WHERE a.product_id = p.product_id AND p.is_available =True AND p.owner_id = u.user_id";
+	$result = mysqli_query($mysqli, $query);
+	return $result;
+}
+
+function getCategories() {
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+	$query = "SELECT DISTINCT CATE FROM PRODUCTS";
+	$result = mysqli_query($mysqli, $query);
+	return $result;
+}
+
+function getProductsFromCategories($cate) {
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+	$query = "SELECT a.*, p.*, u.* FROM AUCTIONS a, PRODUCTS p, USERS u WHERE p.cate = '$cate' AND a.product_id = p.product_id AND p.is_available =True AND p.owner_id = u.user_id";
+	$result = mysqli_query($mysqli, $query);
+	return $result;
+}
+
 function addBids($auction_id, $bid_product_id, $bid_points, $date_range, $bid_pickup){
 	$host = "localhost";
 	$username = "root";
@@ -358,22 +399,6 @@ function addBids($auction_id, $bid_product_id, $bid_points, $date_range, $bid_pi
 	$stmt->execute();
 	$stmt->close();
 	$result = $mysqli->affected_rows;
-	return $result;
-}
-
-################## All Products ####################
-
-function retrieveAvailProducts() {
-
-	$host = "localhost";
-	$username = "root";
-	$password = "";
-	$dbname = "cs2102";
-
-	$mysqli = new mysqli($host,$username,$password,$dbname);
-
-	$query = "SELECT a.*, p.*, u.* FROM AUCTIONS a, PRODUCTS p, USERS u WHERE a.product_id = p.product_id AND p.is_available =True AND p.owner_id = u.user_id";
-	$result = mysqli_query($mysqli, $query);
 	return $result;
 }
 
