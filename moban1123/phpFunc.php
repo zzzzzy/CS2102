@@ -67,6 +67,10 @@ function hasLogin() {
 	}
 }
 
+function logout() {
+	$_SESSION["user"] = null;
+}
+
 
 ################## My items ####################
 
