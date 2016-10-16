@@ -326,7 +326,7 @@ function retrieveAvailProducts() {
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query = "SELECT a.*, p.title FROM AUCTIONS a, PRODUCTS p WHERE a.product_id = p.product_id AND p.is_available =True";
+	$query = "SELECT a.*, p.*, u.* FROM AUCTIONS a, PRODUCTS p, USERS u WHERE a.product_id = p.product_id AND p.is_available =True AND p.owner_id = u.user_id";
 	$result = mysqli_query($mysqli, $query);
 	return $result;
 }
