@@ -20,7 +20,7 @@ if(!isset($_SESSION['conn'])) {
 	if(mysqli_connect_errno()) {
 		exit('Connect failed: '.mysqli_connect_error());
 	}
-	
+
 }
 
 // Closing the connection to database
@@ -68,7 +68,7 @@ function hasLogin() {
 }
 
 
-################## User ####################
+################## My items ####################
 
 function retrieveUser($user) {
 // User: Function to retrieve current user
@@ -118,7 +118,7 @@ function deleteUserItem($item_id) {
 	return $result;
 }
 
-function addUserItem($item_title,$item_description,$item_availability){
+function addUserItem($item_title,$item_description){
 	$host = "localhost";
 	$username = "root";
 	$password = "";
@@ -128,12 +128,7 @@ function addUserItem($item_title,$item_description,$item_availability){
 
 	$item_ownerid = $_SESSION['user'];
 
-	
-	if($item_availability === "true"){
-		$query = "INSERT INTO PRODUCTS (title, description, owner_id, is_available) VALUES (?,?,$item_ownerid,True)";
-	} else {
-		$query = "INSERT INTO PRODUCTS (title, description, owner_id, is_available) VALUES (?,?,$item_ownerid,False)";
-	}
+	$query = "INSERT INTO PRODUCTS (title, description, owner_id, is_available) VALUES (?,?,$item_ownerid,True)";
 
 	$stmt = $mysqli->prepare($query);
 	$stmt->bind_param("ss", $item_title, $item_description);
@@ -143,7 +138,200 @@ function addUserItem($item_title,$item_description,$item_availability){
 	return $result;
 }
 
+# inputs are obtained from the modal
+function editUserItem($item_id,$item_title,$item_description){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query = "UPDATE PRODUCTS SET title='".$item_title."',description='".$item_description."' WHERE product_id = '".$item_id."'";
+
+	mysqli_query($mysqli, $query);
+	$result = mysqli_affected_rows($mysqli);
+
+	return $result;
+}
+
+################## My auctions ####################
+function retrieveAuctions($user){
+	## highest bidding points
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p, BIDS b, USERS u WHERE a.product_id = p.product_id AND p.owner_id = u.user_id AND b.auctions = a.auction_id AND b.product_id = p.product_id AND u.user_id= '".$user."' AND b.points >= (SELECT max(b1.points) FROM AUCTIONS a1, BIDS b1 WHERE b1.auctions = a1.auction_id AND a.auction_id = a1.auction_id)";
+	$result = mysqli_query($mysqli,$query);
+
+	return $result;
+}
+
+function availableItems($user){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query = "SELECT * FROM PRODUCTS p, USERS u WHERE p.owner_id = u.user_id AND u.user_id= '".$user."' AND p.is_available = True";
+	$result = mysqli_query($mysqli,$query);
+	return $result;
+
+}
+
+function addAuction($start_time, $end_time, $pick_up, $min_price, $time_created, $time_ended, $product_id){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query = "INSERT INTO AUCTIONS (start_time_avail, end_time_avail, pick_up, min_price, time_created, time_ended, product_id, status) VALUES (?,?,?,?,?,?,?,True)";
+
+	$stmt = $mysqli->prepare($query);
+	$stmt->bind_param("sssissi", $start_time, $end_time, $pick_up, $min_price, $time_created, $time_ended, $product_id);
+	$stmt->execute();
+	$stmt->close();
+	$result = $mysqli->affected_rows;
+	return $result;
+
+}
+
+function closeAuction($auction_id){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query = "UPDATE AUCTIONS SET status = False WHERE auction_id = '".$auction_id."'";
+
+	mysqli_query($mysqli, $query);
+
+}
+
+function retrieveOpenAuctions($user){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p, USERS u WHERE a.product_id = p.product_id AND p.owner_id = u.user_id AND u.user_id= '".$user."' AND a.status = True";
+	$result = mysqli_query($mysqli,$query);
+
+	return $result;
+}
+
+function retrieveClosedAuctions($user){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p, USERS u WHERE a.product_id = p.product_id AND p.owner_id = u.user_id AND u.user_id= '".$user."' AND a.status = False";
+	$result = mysqli_query($mysqli,$query);
+
+	return $result;
+}
+
+################## My Bids ####################
+
+function retrieveBid($bid_id) {
+
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query = "SELECT * FROM BIDS WHERE bid_id ='".$bid_id."'";
+	$result = mysqli_query($mysqli, $query);
+	return $result;
+}
+
+function retrieveUserBids($user) {
+//retrieve all bids of the user
+
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+	$query =  "SELECT * FROM BIDS b, USERS u WHERE b.bidder_id = u.user_id AND u.user_id= '".$user."'";
+	$result = mysqli_query($mysqli,$query);
+
+	return $result;
+}
+
+
+function deleteBid($bid_id) {
+
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query = "DELETE FROM BIDS WHERE bid_id=".$bid_id."";
+	mysqli_query($mysqli, $query);
+	$result = mysqli_affected_rows($mysqli);
+
+	return $result;
+}
+
+function addBids($auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bid_return_time,$bid_pickup){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$bid_bidderid = $_SESSION['user'];
+	$bid_time_created = date('Y-m-d H:i:s');
+
+	$query = "INSERT INTO BIDS (auctions, bidder_id, product_id, points, time_created, borrow_time, return_time, pickup) VALUES (?, $bid_bidderid, ?, ?, $bid_time_created, ?, ?, ?)";
+
+	$stmt = $mysqli->prepare($query);
+	$stmt->bind_param("iiisss", $auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bid_return_time,$bid_pickup);
+	$stmt->execute();
+	$stmt->close();
+	$result = $mysqli->affected_rows;
+	return $result;
+}
+
+################## All Products ####################
+
+function retrieveAvailProducts() {
+
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query = "SELECT a.*, p.title FROM AUCTIONS a, PRODUCT p WHERE a.product_id = p.product_id AND p.is_available =True";
+	$result = mysqli_query($mysqli, $query);
+	return $result;
+}
+
 ## Destroy each session
-#session_destroy(); 
+#session_destroy();
 
 ?>
