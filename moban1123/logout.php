@@ -1,7 +1,17 @@
+<?php
+	# php logic file
+include('phpFunc.php');
+
+logout();
+
+  # html <HEAD>, starts <BODY> and top menu of page
+include('header.php');
+?>
+
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Easy Share</title>
+<title>Login</title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all">
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="js/jquery-1.11.0.min.js"></script>
@@ -51,58 +61,28 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
-<!--header strat here-->
-<div class="header">
+
+
+<!--log in start here-->
+<div class="login">
 	<div class="container">
-		<div class="header-main">
-			<div class="top-nav">
-				<div class="content white">
-	              <nav class="navbar navbar-default" role="navigation">
-					    <div class="navbar-header">
-					        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-						        <span class="sr-only">Toggle navigation</span>
-						        <span class="icon-bar"></span>
-						        <span class="icon-bar"></span>
-						        <span class="icon-bar"></span>
-					        </button>
-					        <div class="navbar-brand logo">
-								<a href="index.html"><img src="images/logo1.png" alt=""></a>
-							</div>
-					    </div>
-					    <!--/.navbar-header-->
-					 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					        <ul class="nav navbar-nav">
-					        	   <li><a href="all_products.html">All PRODUCTS</a></li>
-											 <li><a href="my_products.html">MY PRODUCTS</a></li>
-											 <li><a href="my_auctions.html">MY AUCTIONS</a></li>
-											 <li><a href="my_bids.html">MY BIDS</a></li>
-
-					        </ul>
-					    </div>
-					    <!--/.navbar-collapse-->
-					</nav>
-					<!--/.navbar-->
-				</div>
-			</div>
-			<div class="header-right">
-				<div class="search">
-					<div class="search-text">
-					    <input class="serch" type="text" value="Search" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search';}"/>
-					</div>
-
-					<div class="head-signin">
-						<?php if(isset($_SESSION['user'])) { ?>
-							<h5><a href="logout.php"><i class="hd-dign"></i>Sign Out</a></h5>
-						<?php } else { ?>
-							<h5><a href="login.php"><i class="hd-dign"></i>Sign In</a></h5>
-						<?php }?>
-					</div>
-
-                     <div class="clearfix"> </div>
-				</div>
-			</div>
-		 <div class="clearfix"> </div>
+		<div class="alert alert-info">
+			<h4>Logout!</h4><!-- Message -->
+			<?php echo 'Click <a href="login.php">here to login</a> again'; ?>
 		</div>
 	</div>
 </div>
-<!--header end here-->
+<!--log in end here-->
+<!--footer strat here-->
+<div class="footer">
+
+</div>
+<!--footer end here-->
+</body>
+</html>
+
+
+<?php
+  # closes the <BODY> and include scripts
+	include('footer.php');
+?>

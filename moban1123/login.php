@@ -1,7 +1,25 @@
+<?php
+	# php logic file
+include('phpFunc.php');
+
+if(isset($_POST['User'])) {
+		# User trying to log in.
+	$result = login($_POST['User'], $_POST['Pwd']);
+
+	if(!$result) {
+		$errMsg = 'Invalid credentials. Please try again.';
+	}else{
+		$_SESSION["user"] = $result;
+	}
+}
+  # html <HEAD>, starts <BODY> and top menu of page
+include('header.php');
+?>
+
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Easy Share</title>
+<title>Login</title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all">
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="js/jquery-1.11.0.min.js"></script>
@@ -51,58 +69,62 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
-<!--header strat here-->
-<div class="header">
+
+
+<!--log in start here-->
+<div class="login">
 	<div class="container">
-		<div class="header-main">
-			<div class="top-nav">
-				<div class="content white">
-	              <nav class="navbar navbar-default" role="navigation">
-					    <div class="navbar-header">
-					        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-						        <span class="sr-only">Toggle navigation</span>
-						        <span class="icon-bar"></span>
-						        <span class="icon-bar"></span>
-						        <span class="icon-bar"></span>
-					        </button>
-					        <div class="navbar-brand logo">
-								<a href="index.html"><img src="images/logo1.png" alt=""></a>
-							</div>
-					    </div>
-					    <!--/.navbar-header-->
-					 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					        <ul class="nav navbar-nav">
-					        	   <li><a href="all_products.html">All PRODUCTS</a></li>
-											 <li><a href="my_products.html">MY PRODUCTS</a></li>
-											 <li><a href="my_auctions.html">MY AUCTIONS</a></li>
-											 <li><a href="my_bids.html">MY BIDS</a></li>
-
-					        </ul>
-					    </div>
-					    <!--/.navbar-collapse-->
-					</nav>
-					<!--/.navbar-->
-				</div>
-			</div>
-			<div class="header-right">
-				<div class="search">
-					<div class="search-text">
-					    <input class="serch" type="text" value="Search" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search';}"/>
-					</div>
-
-					<div class="head-signin">
-						<?php if(isset($_SESSION['user'])) { ?>
-							<h5><a href="logout.php"><i class="hd-dign"></i>Sign Out</a></h5>
-						<?php } else { ?>
-							<h5><a href="login.php"><i class="hd-dign"></i>Sign In</a></h5>
-						<?php }?>
-					</div>
-
-                     <div class="clearfix"> </div>
-				</div>
-			</div>
-		 <div class="clearfix"> </div>
+		<form class="login-main" action="" method="POST">
+			<?php 
+			if(isset($_SESSION["user"])) {
+				# User has already successfully logged in
+				# Display Alert
+			?>
+		<div class="alert alert-info">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<h4>You are in!</h4><!-- Message -->
+			<?php echo 'If this is not your account, <a href="logout.php">please click here to switch accounts</a>'; ?>
 		</div>
+		<?php
+
+	} else {
+		?>
+		<h1>Login</h1>
+		  <div class="col-md-6 login-left">
+			<h2>Existing User</h2>
+			<form>
+				<input type="text" placeholder="Email" id="Email" name="User" required>
+				<input type="password" placeholder="Password" id="Password" name="Pwd" required>
+				<input type="submit" value="Login">
+			</form>
+			<?php if(isset($errMsg)) {?>
+				<div class="alert alert-error">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<h4>Login Failed</h4><!-- Message -->
+					<?php echo $errMsg; ?>
+				</div>
+			<?php }?>
+		  </div>
+		  <div class="col-md-6 login-right">
+		  	 <h3>New User? Create an Account</h3>
+		     <a href="signup.html" class="login-btn">Create an Account </a>
+		  </div>
+		  <div class="clearfix"> </div>
+		  <?php }?>
+		</form>
 	</div>
 </div>
-<!--header end here-->
+<!--log in end here-->
+<!--footer strat here-->
+<div class="footer">
+
+</div>
+<!--footer end here-->
+</body>
+</html>
+
+
+<?php
+  # closes the <BODY> and include scripts
+	include('footer.php');
+?>
