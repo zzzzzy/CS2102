@@ -179,13 +179,13 @@ function availableItems($user){
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query = "SELECT * FROM PRODUCTS p, USERS u WHERE p.owner_id = u.user_id, u.user_id= '".$user."' AND p.is_available = True";
+	$query = "SELECT * FROM PRODUCTS p, USERS u WHERE p.owner_id = u.user_id AND u.user_id= '".$user."' AND p.is_available = True";
 	$result = mysqli_query($mysqli,$query);
 	return $result;
 
 }
 
-function addAuctions($start_time, $end_time, $pick_up, $min_price, $time_created, $time_ended, $product_id, $status){
+function addAuction($start_time, $end_time, $pick_up, $min_price, $time_created, $time_ended, $product_id){
 	$host = "localhost";
 	$username = "root";
 	$password = "";
@@ -193,10 +193,10 @@ function addAuctions($start_time, $end_time, $pick_up, $min_price, $time_created
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query = "INSERT INTO AUCTIONS (start_time_avail, end_time_avail, pick_up, min_price, time_created, time_ended, product_id, status) VALUES (?,?,?,?,?,?,?,?)";
+	$query = "INSERT INTO AUCTIONS (start_time_avail, end_time_avail, pick_up, min_price, time_created, time_ended, product_id, status) VALUES (?,?,?,?,?,?,?,True)";
 
 	$stmt = $mysqli->prepare($query);
-	$stmt->bind_param("ss", $item_title, $item_description);
+	$stmt->bind_param("sssissi", $start_time, $end_time, $pick_up, $min_price, $time_created, $time_ended, $product_id);
 	$stmt->execute();
 	$stmt->close();
 	$result = $mysqli->affected_rows;
@@ -204,7 +204,7 @@ function addAuctions($start_time, $end_time, $pick_up, $min_price, $time_created
 
 }
 
-function closeAuctions($auction_id){
+function closeAuction($auction_id){
 	$host = "localhost";
 	$username = "root";
 	$password = "";
@@ -226,7 +226,7 @@ function retrieveOpenAuctions($user){
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p, USERS u WHERE a.product_id = p.product_id, p.owner_id = u.user_id, u.user_id= '".$user."' AND status = True";
+	$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p, USERS u WHERE a.product_id = p.product_id AND p.owner_id = u.user_id AND u.user_id= '".$user."' AND a.status = True";
 	$result = mysqli_query($mysqli,$query);
 
 	return $result;
@@ -240,7 +240,7 @@ function retrieveClosedAuctions($user){
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p, USERS u WHERE a.product_id = p.product_id, p.owner_id = u.user_id, u.user_id= '".$user."' AND status = False";
+	$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p, USERS u WHERE a.product_id = p.product_id AND p.owner_id = u.user_id AND u.user_id= '".$user."' AND a.status = False";
 	$result = mysqli_query($mysqli,$query);
 
 	return $result;
@@ -249,7 +249,6 @@ function retrieveClosedAuctions($user){
 ################## My Bids ####################
 
 function retrieveBid($bid_id) {
-// User: Function to retrieve current user
 
 	$host = "localhost";
 	$username = "root";
@@ -264,7 +263,7 @@ function retrieveBid($bid_id) {
 }
 
 function retrieveUserBids($user) {
-// User: Function to retrieve all items of the user
+//retrieve all bids of the user
 
 	$host = "localhost";
 	$username = "root";
@@ -280,7 +279,6 @@ function retrieveUserBids($user) {
 
 
 function deleteBid($bid_id) {
-		// Admin: Function to delete the camera
 
 	$host = "localhost";
 	$username = "root";
@@ -310,7 +308,7 @@ function addBids($auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bi
 	$query = "INSERT INTO BIDS (auctions, bidder_id, product_id, points, time_created, borrow_time, return_time, pickup) VALUES (?, $bid_bidderid, ?, ?, $bid_time_created, ?, ?, ?)";
 
 	$stmt = $mysqli->prepare($query);
-	$stmt->bind_param("iidsss", $auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bid_return_time,$bid_pickup);
+	$stmt->bind_param("iiisss", $auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bid_return_time,$bid_pickup);
 	$stmt->execute();
 	$stmt->close();
 	$result = $mysqli->affected_rows;
@@ -320,7 +318,6 @@ function addBids($auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bi
 ################## All Products ####################
 
 function retrieveAvailProducts() {
-// User: Function to retrieve current user
 
 	$host = "localhost";
 	$username = "root";
@@ -329,7 +326,7 @@ function retrieveAvailProducts() {
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query = "SELECT a.*, p.title FROM AUCTIONS a, PRODUCT p WHERE a.product_id = p.product_id and status ='open' ";
+	$query = "SELECT a.*, p.title FROM AUCTIONS a, PRODUCT p WHERE a.product_id = p.product_id AND p.is_available =True";
 	$result = mysqli_query($mysqli, $query);
 	return $result;
 }
