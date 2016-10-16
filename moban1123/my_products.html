@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>All Product</title>
+<title>My Product</title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all">
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="js/jquery-1.11.0.min.js"></script>
@@ -131,7 +131,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			      <div class="col-md-4 home-grid">
 					<div class="home-product-main">
 					   <div class="home-product-top">
-							  <button class="imagebtn" data-toggle="modal" data-target="#viewProduct">
+							  <button class="imagebtn" data-toggle="modal" data-target="#editProduct">
 					      	<img id = 'product-img' src="images/h6.jpg" alt="" class="img-responsive zoom-img">
 							  </button>
 					   </div>
@@ -144,7 +144,16 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						</div>
 					</div>
 				 </div>
+				 <div class="col-md-4 home-grid">
+			 <div class="home-product-main">
+					<div class="home-product-top">
+						 <button class="imagebtn" data-toggle="modal" data-target="#addProduct">
+							 <img id = 'product-img' src="images/plus.png" alt="" class="img-responsive zoom-img">
+						 </button>
+					</div>
 
+			 </div>
+			</div>
 			      <div class="clearfix"> </div>
 			  </div>
 		</div>
@@ -153,77 +162,56 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!--product end here-->
 
       <!-- start: modal for create new student -->
-  <div class="modal fade" id="viewProduct" role="dialog">
+  <div class="modal fade" id="editProduct" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-              <h4 class="modal-title" id="myModalLabel">Create a Bidding</h4>
+              <h4 class="modal-title" id="myModalLabel">Product Details</h4>
             </div>
-            <form id="createItem" class="form-horizontal" method="POST">
+            <form id="editProduct" class="form-horizontal" method="POST">
               <div class="modal-body">
 								<div class="form-group">
                   <label class="col-sm-4 control-label">Product Name</label>
                   <div class="col-sm-8 control-label">
-	                  <p> Hand Bag </p>
+	                  <input type="text" value="Handbag" />
                   </div>
                 </div>
 								<div class="form-group">
 									<label class="col-sm-4 control-label">Product Description</label>
 									<div class="col-sm-8 control-label">
-										<p> #descrpition </p>
+										<input type="text" value="#description" />
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label">Owner</label>
+									<label class="col-sm-4 control-label">Category</label>
 									<div class="col-sm-8 control-label">
-										<p> Shen Lin </p>
+										<select style='width:100px;' name="product category">
+                        <option value="clothings">clothings</option>
+                        <option value="book">book</option>
+												<option value="furniture">furniture</option>
+                    </select>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label">Min Bidding Points</label>
+									<label class="col-sm-4 control-label">Picture</label>
 									<div class="col-sm-8 control-label">
-										<p> 200 </p>
+										<input type="file">
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-4 control-label">Available Time</label>
+									<label class="col-sm-4 control-label">Status</label>
 									<div class="col-sm-8 control-label">
-										<p> 10/08/2016 - 10/20/2016 </p>
+										<p> Available </p>
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label">Favorable Pickup Point</label>
-									<div class="col-sm-8 control-label">
-										<p> PGP </p>
-									</div>
-								</div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">Borrow - Return Time</label>
-                  <div class="col-sm-8">
-                    <input type="text" name="daterange" value="10/08/2016 - 10/20/2016" />
-										<script type="text/javascript">
-												$('input[name="daterange"]').daterangepicker();
-										</script>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">Pickup Point </label>
-                  <div class="col-sm-8">
-                    <input name="bid_pickup_point" required="true" class="form-control"></input>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-sm-4 control-label">Bidding Points </label>
-                  <div class="col-sm-8">
-  										<input name="bidding_points" required="true" class="form-control"></input>
-                  </div>
-                </div>
-              </div>
+							</div>
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                <button type="submit" name="add_item" class="btn btn-success btn-round">Confirm</button>
+                <button type="submit" name="update_product" class="btn btn-success btn-round">Update</button>
+								<button type="submit" name="update_product" class="btn btn-success btn-round">Delete</button>
+								<button type="button" name="create_auction" class="btn btn-success btn-round" data-dismiss="modal" data-toggle="modal" data-target="#addAuction">Create an Auction</button>
               </div>
             </form>
           </div>
@@ -231,6 +219,101 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
       </div>
 
       <!-- end: modal for create new student -->
+
+			<div class="modal fade" id="addAuction" role="dialog">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+									<h4 class="modal-title" id="myModalLabel">Create an Auction</h4>
+								</div>
+								<form id="addAuction" class="form-horizontal" method="POST">
+									<div class="modal-body">
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Product Name</label>
+											<div class="col-sm-8 control-label">
+												<p> Hand Bag </p>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Min Bidding Points</label>
+											<div class="col-sm-8">
+												<input name="min_bidding_points" required="true" class="form-control"></input>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4">Available Time</label>
+											<div class="col-sm-8">
+												<input type="text" name="daterange" value="10/08/2016 - 10/20/2016" />
+												<script type="text/javascript">
+														$('input[name="daterange"]').daterangepicker();
+												</script>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 control-label">Favorable Pickup Point</label>
+											<div class="col-sm-8">
+												<input name="pickkup_point" required="true" class="form-control"></input>
+											</div>
+										</div>
+
+									<div class="modal-footer">
+										<button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+										<button type="submit" name="add_item" class="btn btn-success btn-round">Confirm</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal fade" id="addProduct" role="dialog">
+			        <div class="modal-dialog">
+			          <div class="modal-content">
+			            <div class="modal-header">
+			              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			              <h4 class="modal-title" id="myModalLabel">Product Details</h4>
+			            </div>
+			            <form id="editProduct" class="form-horizontal" method="POST">
+			              <div class="modal-body">
+											<div class="form-group">
+			                  <label class="col-sm-4 control-label">Product Name</label>
+			                  <div class="col-sm-8 control-label">
+				                  <input type="text" value="" />
+			                  </div>
+			                </div>
+											<div class="form-group">
+												<label class="col-sm-4 control-label">Product Description</label>
+												<div class="col-sm-8 control-label">
+													<input type="text" value="" />
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-4 control-label">Category</label>
+												<div class="col-sm-8 control-label">
+													<select style='width:100px;' name="product category">
+			                        <option value="clothings">clothings</option>
+			                        <option value="book">book</option>
+															<option value="furniture">furniture</option>
+			                    </select>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-4 control-label">Picture</label>
+												<div class="col-sm-8 control-label">
+													<input type="file">
+												</div>
+											</div>
+										</div>
+
+			              <div class="modal-footer">
+			                <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+			                <button type="submit" name="update_product" class="btn btn-success btn-round">Confirm</button>
+
+			              </div>
+			            </form>
+			          </div>
+			        </div>
+			      </div>
 <!--footer strat here-->
 <div class="footer">
 
