@@ -7,11 +7,16 @@ $rows = mysqli_fetch_all($userItems,MYSQLI_ASSOC);
 include('header.php');
 
 if (isset($_POST['add_product'])){
-	$result = addUserItem($_POST['item_title'],$_POST['item_description']);
-	if ($result == 0) {
-		$errmsg = 'Please try again. :(';
-	} else {
-		$successmsg ='Please click <a href="my_products.php">here</a> to refresh.';
+	$filename = $_FILES['item_pic']['name'];
+	$upload_directory = "uploads/";
+	$TargetPath=time().$filename;
+	if(move_uploaded_file($_FILES['item_pic']['tmp_name'], $upload_directory.$TargetPath)){
+		$result = addUserItem($_POST['item_title'],$_POST['item_description'],$upload_directory.$TargetPath);
+		if ($result == 0) {
+			$errmsg = 'Please try again. :(';
+		} else {
+			$successmsg ='Please click <a href="my_products.php">here</a> to refresh.';
+		}
 	}
 }
 
@@ -35,11 +40,16 @@ if (isset($_POST['delete_product'])) {
 }
 
 if (isset($_POST['update_product'])) {
-	$result = editUserItem($_POST['item_id'],$_POST['item_title'],$_POST['item_description']);
-	if ($result == 0) {
-		$errmsg = 'Please try again. :(';
-	} else {
-		$successmsg ='Please click <a href="my_products.php">here</a> to refresh.';
+	$filename = $_FILES['item_pic']['name'];
+	$upload_directory = "uploads/";
+	$TargetPath=time().$filename;
+	if(move_uploaded_file($_FILES['item_pic']['tmp_name'], $upload_directory.$TargetPath)){
+		$result = editUserItem($_POST['item_id'],$_POST['item_title'],$_POST['item_description'],$upload_directory.$TargetPath);
+		if ($result == 0) {
+			$errmsg = 'Please try again. :(';
+		} else {
+			$successmsg ='Please click <a href="my_products.php">here</a> to refresh.';
+		}
 	}
 }
 ?>
@@ -77,7 +87,7 @@ if (isset($_POST['update_product'])) {
 							<div class="home-product-main">
 								<div class="home-product-top">
 									<button class="imagebtn" data-toggle="modal" data-target="#editProduct_<?php echo $row['PRODUCT_ID'];?>">
-										<img id = 'product-img' src="images/h6.jpg" alt="" class="img-responsive zoom-img">
+										<img id = 'product-img' src="<?php echo $row['PIC'];?>" alt="" class="img-responsive zoom-img" width="233px" height="233px">
 									</button>
 								</div>
 								<div class="home-product-bottom">
@@ -87,9 +97,7 @@ if (isset($_POST['update_product'])) {
 							</div>
 						</div>
 						<!-- start: modal for create new student -->
-					<?php } ;?>
-					<?php
-					foreach ($rows as $row) {?>
+
 						<div class="modal fade" id="editProduct_<?php echo $row['PRODUCT_ID']; ?>" role="dialog">
 							<div class="modal-dialog">
 								<div class="modal-content">
@@ -97,7 +105,7 @@ if (isset($_POST['update_product'])) {
 										<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 										<h4 class="modal-title" id="myModalLabel">Product Details</h4>
 									</div>
-									<form id="editProduct" class="form-horizontal" method="POST">
+									<form id="editProduct" class="form-horizontal" method="POST" enctype="multipart/form-data">
 										<div class="modal-body">
 											<div class="form-group">
 												<label class="col-sm-4 control-label">Product Name</label>
@@ -124,7 +132,7 @@ if (isset($_POST['update_product'])) {
 											<div class="form-group">
 												<label class="col-sm-4 control-label">Picture</label>
 												<div class="col-sm-8 control-label">
-													<input type="file">
+													<input type="file" name="item_pic"/>
 												</div>
 											</div>
 											<div class="form-group">
@@ -147,9 +155,7 @@ if (isset($_POST['update_product'])) {
 								</div>
 							</div>
 						</div>
-						<?php } ;?>
-						<?php
-						foreach ($rows as $row) {?>
+
 						<div class="modal fade" id="addAuction_<?php echo $row['PRODUCT_ID']; ?>" role="dialog">
 							<div class="modal-dialog">
 								<div class="modal-content">
@@ -228,7 +234,7 @@ if (isset($_POST['update_product'])) {
 					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 					<h4 class="modal-title" id="myModalLabel">Product Details</h4>
 				</div>
-				<form id="editProduct" class="form-horizontal" method="POST">
+				<form id="editProduct" class="form-horizontal" method="POST" enctype="multipart/form-data">
 					<div class="modal-body">
 						<div class="form-group">
 							<label class="col-sm-4 control-label">Product Name</label>
@@ -255,7 +261,7 @@ if (isset($_POST['update_product'])) {
 						<div class="form-group">
 							<label class="col-sm-4 control-label">Picture</label>
 							<div class="col-sm-8 control-label">
-								<input type="file">
+								<input type="file" name="item_pic"/>
 							</div>
 						</div>
 					</div>

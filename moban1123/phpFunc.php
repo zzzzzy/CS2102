@@ -16,7 +16,7 @@ if(!isset($_SESSION['conn'])) {
 	$dbname = "cs2102";
 
 	$_SESSION['conn'] = new mysqli($host,$username,$password,$dbname);
-			# Not sure what these thing does...
+
 	if(mysqli_connect_errno()) {
 		exit('Connect failed: '.mysqli_connect_error());
 	}
@@ -156,7 +156,6 @@ function addUserItem($item_title,$item_description,$item_pic){
 	$item_ownerid = $_SESSION['user'];
 
 	$query = "INSERT INTO PRODUCTS (title, description, owner_id, is_available, pic) VALUES (?,?,$item_ownerid,True,?)";
-
 	$stmt = $mysqli->prepare($query);
 	$stmt->bind_param("sss", $item_title, $item_description,$item_pic);
 	$stmt->execute();
@@ -174,7 +173,7 @@ function editUserItem($item_id,$item_title,$item_description,$item_pic){
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query = "UPDATE PRODUCTS SET title='".$item_title."',description='".$item_description."' WHERE product_id = '".$item_id."' AND pic = '".$item_pic."'";
+	$query = "UPDATE PRODUCTS SET title='".$item_title."', description='".$item_description."', pic = '".$item_pic."' WHERE product_id = ".$item_id."";
 
 	mysqli_query($mysqli, $query);
 	$result = mysqli_affected_rows($mysqli);
