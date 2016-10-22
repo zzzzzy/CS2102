@@ -127,6 +127,18 @@ function retrieveUserItems($user) {
 	return $result;
 }
 
+function retrieveUserItemsByCategories($user,$cate) {
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+	$query =  "SELECT * FROM PRODUCTS p, USERS u WHERE p.owner_id = u.user_id AND u.user_id= '".$user."' AND p.cate='".$cate."'";
+	$result = mysqli_query($mysqli, $query);
+	return $result;
+}
+
 
 function deleteUserItem($item_id) {
 		// Admin: Function to delete the camera
@@ -145,7 +157,7 @@ function deleteUserItem($item_id) {
 	return $result;
 }
 
-function addUserItem($item_title,$item_description,$item_pic){
+function addUserItem($item_title,$item_description,$item_cate,$item_pic){
 	$host = "localhost";
 	$username = "root";
 	$password = "";
@@ -155,9 +167,9 @@ function addUserItem($item_title,$item_description,$item_pic){
 
 	$item_ownerid = $_SESSION['user'];
 
-	$query = "INSERT INTO PRODUCTS (title, description, owner_id, is_available, pic) VALUES (?,?,$item_ownerid,True,?)";
+	$query = "INSERT INTO PRODUCTS (title, cate, description, owner_id, is_available, pic) VALUES (?,?,?,$item_ownerid,True,?)";
 	$stmt = $mysqli->prepare($query);
-	$stmt->bind_param("sss", $item_title, $item_description,$item_pic);
+	$stmt->bind_param("ssss", $item_title,$item_cate,$item_description,$item_pic);
 	$stmt->execute();
 	$stmt->close();
 	$result = $mysqli->affected_rows;
@@ -165,7 +177,7 @@ function addUserItem($item_title,$item_description,$item_pic){
 }
 
 # inputs are obtained from the modal
-function editUserItem($item_id,$item_title,$item_description,$item_pic){
+function editUserItem($item_id,$item_title,$item_description,$item_cate,$item_pic){
 	$host = "localhost";
 	$username = "root";
 	$password = "";
@@ -173,7 +185,11 @@ function editUserItem($item_id,$item_title,$item_description,$item_pic){
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query = "UPDATE PRODUCTS SET title='".$item_title."', description='".$item_description."', pic = '".$item_pic."' WHERE product_id = ".$item_id."";
+	if($item_pic!=''){
+		$query = "UPDATE PRODUCTS SET title='".$item_title."', cate='".$item_cate."', description='".$item_description."', pic = '".$item_pic."' WHERE product_id = ".$item_id."";
+	} else {
+		$query = "UPDATE PRODUCTS SET title='".$item_title."', cate='".$item_cate."', description='".$item_description."' WHERE product_id = ".$item_id."";
+	}
 
 	mysqli_query($mysqli, $query);
 	$result = mysqli_affected_rows($mysqli);

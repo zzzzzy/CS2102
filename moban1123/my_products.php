@@ -3,7 +3,7 @@
 include('phpFunc.php');
 $userInfo = retrieveUser($_SESSION['user']);
 $userItems = retrieveUserItems($_SESSION["user"]);
-$rows = mysqli_fetch_all($userItems,MYSQLI_ASSOC);
+
 include('header.php');
 
 if (isset($_POST['add_product'])){
@@ -11,7 +11,7 @@ if (isset($_POST['add_product'])){
 	$upload_directory = "uploads/";
 	$TargetPath=time().$filename;
 	if(move_uploaded_file($_FILES['item_pic']['tmp_name'], $upload_directory.$TargetPath)){
-		$result = addUserItem($_POST['item_title'],$_POST['item_description'],$upload_directory.$TargetPath);
+		$result = addUserItem($_POST['item_title'],$_POST['item_description'],$_POST['item_cate'],$upload_directory.$TargetPath);
 		if ($result == 0) {
 			$errmsg = 'Please try again. :(';
 		} else {
@@ -40,16 +40,33 @@ if (isset($_POST['delete_product'])) {
 }
 
 if (isset($_POST['update_product'])) {
-	$filename = $_FILES['item_pic']['name'];
-	$upload_directory = "uploads/";
-	$TargetPath=time().$filename;
-	if(move_uploaded_file($_FILES['item_pic']['tmp_name'], $upload_directory.$TargetPath)){
-		$result = editUserItem($_POST['item_id'],$_POST['item_title'],$_POST['item_description'],$upload_directory.$TargetPath);
+	if($_FILES['item_pic']['size']!=0){
+		$filename = $_FILES['item_pic']['name'];
+		$upload_directory = "uploads/";
+		$TargetPath=time().$filename;
+		if(move_uploaded_file($_FILES['item_pic']['tmp_name'], $upload_directory.$TargetPath)){
+			$result = editUserItem($_POST['item_id'],$_POST['item_title'],$_POST['item_description'],$_POST['item_cate'],$upload_directory.$TargetPath);
+			if ($result == 0) {
+				$errmsg = 'Please try again. :(';
+			} else {
+				$successmsg ='Please click <a href="my_products.php">here</a> to refresh.';
+			}
+		}
+	}else{
+		$result = editUserItem($_POST['item_id'],$_POST['item_title'],$_POST['item_description'],$_POST['item_cate'],'');
 		if ($result == 0) {
 			$errmsg = 'Please try again. :(';
 		} else {
 			$successmsg ='Please click <a href="my_products.php">here</a> to refresh.';
 		}
+	}
+}
+
+if (isset($_POST['cate_button'])){
+  if ($_POST['check_list'] != 'All') {
+    $userItems = retrieveUserItemsByCategories($_SESSION["user"],$_POST['check_list']);
+  } else {
+		$userItems = retrieveUserItems($_SESSION["user"]);
 	}
 }
 ?>
@@ -66,14 +83,25 @@ if (isset($_POST['update_product'])) {
 							<section  class="sky-form">
 								<h1>Categories</h1>
 								<div class="row1 scroll-pane">
-									<div class="col col-4">
-										<label class="checkbox"><input type="checkbox" name="checkbox" checked=""><i></i>All Accessories</label>
-									</div>
-									<div class="col col-4">
-										<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>handbags</label>
-										<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Bracelets</label>
-										<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Watches</label>
-									</div>
+									<form name="cate" method='POST'>
+										<div class="col col-4">
+											<label class="checkbox"><input type="checkbox" name="check_list" value='All'><i></i>All</label>
+										</div>
+										<div class="col col-4">
+											<?php
+											$allCategories = getCategories();
+											$cat_rows = mysqli_fetch_all($allCategories,MYSQLI_ASSOC);
+											foreach($cat_rows as $cat_row) { ?>
+												<label class="checkbox"><input type="checkbox" name="check_list" value = "<?php echo $cat_row['CATE']; ?>"><i></i><?php echo $cat_row['CATE']; ?></label>
+											<?php } ;?>
+											<script>
+												$('input[type="checkbox"]').on('change', function() {
+													$('input[type="checkbox"]').not(this).prop('checked', false);
+												});
+											</script>
+										</div>
+										<button type="submit" class="btn btn-success btn-round" name="cate_button">Confirm</button>
+									</form>
 								</div>
 							</section>
 						</div>
@@ -82,6 +110,8 @@ if (isset($_POST['update_product'])) {
 				<div class="col-md-9 product-block">
 
 					<?php
+					$userItems = retrieveUserItems($_SESSION["user"]);
+					$rows = mysqli_fetch_all($userItems,MYSQLI_ASSOC);
 					foreach ($rows as $row) {?>
 						<div class="col-md-4 home-grid">
 							<div class="home-product-main">
@@ -92,7 +122,7 @@ if (isset($_POST['update_product'])) {
 								</div>
 								<div class="home-product-bottom">
 									<h3 style="color:white"><?php echo $row['TITLE'] ;?></h3>
-									<p>category</p>
+									<p><?php echo $row['CATE'] ;?></p>
 								</div>
 							</div>
 						</div>
@@ -122,10 +152,23 @@ if (isset($_POST['update_product'])) {
 											<div class="form-group">
 												<label class="col-sm-4 control-label">Category</label>
 												<div class="col-sm-8 control-label">
-													<select style='width:100px;' name="product category">
-														<option value="clothings">clothings</option>
-														<option value="book">book</option>
-														<option value="furniture">furniture</option>
+													<select style='width:100px;' name="item_cate">
+														<?php
+														$cates = array('Stationery','Electronics','Vehicle','Luxury','Clothes','Furniture');
+														foreach ($cates as $cate) {
+															if ($row['CATE']==$cate) { ?>
+																<option selected value="<?php echo $cate;?>"><?php echo $cate;?></option>
+														  <?php }
+															else { ?>
+																<option value="<?php echo $cate;?>"><?php echo $cate;?></option>
+														 <?php }
+													  } ?>
+														<script>
+														$('select').on('change', function (e) {
+															var optionSelected = $("option:selected", this);
+															var valueSelected = this.value;
+														});
+														</script>
 													</select>
 												</div>
 											</div>
@@ -234,7 +277,7 @@ if (isset($_POST['update_product'])) {
 					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 					<h4 class="modal-title" id="myModalLabel">Product Details</h4>
 				</div>
-				<form id="editProduct" class="form-horizontal" method="POST" enctype="multipart/form-data">
+				<form id="addProduct" class="form-horizontal" method="POST" enctype="multipart/form-data">
 					<div class="modal-body">
 						<div class="form-group">
 							<label class="col-sm-4 control-label">Product Name</label>
@@ -251,10 +294,13 @@ if (isset($_POST['update_product'])) {
 						<div class="form-group">
 							<label class="col-sm-4 control-label">Category</label>
 							<div class="col-sm-8 control-label">
-								<select style='width:100px;' name="product category">
-									<option value="clothings">clothings</option>
-									<option value="book">book</option>
-									<option value="furniture">furniture</option>
+								<select style='width:100px;' name="item_cate">
+									<option value="Stationery">Stationery</option>
+									<option value="Electronics">Electronics</option>
+									<option value="Vehicle">Vehicle</option>
+									<option value="Luxury">Luxury</option>
+									<option value="Clothes">Clothes</option>
+									<option value="Furniture">Furniture</option>
 								</select>
 							</div>
 						</div>
