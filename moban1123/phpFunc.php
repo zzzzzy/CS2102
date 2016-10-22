@@ -40,8 +40,8 @@ function login($user, $pwd) {
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-    $query = "SELECT user_id FROM USERS WHERE email =? AND password =?";
-   	$stmt = $mysqli->prepare($query);
+	$query = "SELECT user_id FROM USERS WHERE email =? AND password =?";
+	$stmt = $mysqli->prepare($query);
 	if($stmt == FALSE) { die($mysqli->error); }
 	$stmt->bind_param("ss", $user, $pwd);
 
@@ -122,7 +122,7 @@ function deleteUserItem($item_id) {
 	return $result;
 }
 
-function addUserItem($item_title,$item_description){
+function addUserItem($item_title,$item_description,$item_pic){
 	$host = "localhost";
 	$username = "root";
 	$password = "";
@@ -132,10 +132,10 @@ function addUserItem($item_title,$item_description){
 
 	$item_ownerid = $_SESSION['user'];
 
-	$query = "INSERT INTO PRODUCTS (title, description, owner_id, is_available) VALUES (?,?,$item_ownerid,True)";
+	$query = "INSERT INTO PRODUCTS (title, description, owner_id, is_available, pic) VALUES (?,?,$item_ownerid,True,?)";
 
 	$stmt = $mysqli->prepare($query);
-	$stmt->bind_param("ss", $item_title, $item_description);
+	$stmt->bind_param("sss", $item_title, $item_description,$item_pic);
 	$stmt->execute();
 	$stmt->close();
 	$result = $mysqli->affected_rows;
@@ -143,7 +143,7 @@ function addUserItem($item_title,$item_description){
 }
 
 # inputs are obtained from the modal
-function editUserItem($item_id,$item_title,$item_description){
+function editUserItem($item_id,$item_title,$item_description,$item_pic){
 	$host = "localhost";
 	$username = "root";
 	$password = "";
@@ -151,7 +151,7 @@ function editUserItem($item_id,$item_title,$item_description){
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query = "UPDATE PRODUCTS SET title='".$item_title."',description='".$item_description."' WHERE product_id = '".$item_id."'";
+	$query = "UPDATE PRODUCTS SET title='".$item_title."',description='".$item_description."' WHERE product_id = '".$item_id."' AND pic = '".$item_pic."'";
 
 	mysqli_query($mysqli, $query);
 	$result = mysqli_affected_rows($mysqli);
@@ -195,8 +195,6 @@ function addAuction($date_range, $pick_up, $min_price, $product_id){
 	$password = "";
 	$dbname = "cs2102";
 
-	//$start_time = $start_time.toISOString().substring(0, 10);
-	//$end_time = $end_time.toISOString().substring(0, 10);
 
 	$string = explode('-',$date_range);
 
@@ -292,6 +290,41 @@ function retrieveUserBids($user) {
 	return $result;
 }
 
+function updateBid($bid_id,$point) {
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$bidder_id = $_SESSION['user'];
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query = "SELECT * FROM BIDS WHERE bid_id = '".$bid_id."'";
+	$initial_bid = mysqli_query($mysqli,$query);
+	$row = mysqli_fetch_array($initial_bid,MYSQLI_ASSOC);
+	$initial_bid = $row['POINTS'];
+
+	if ($initial_bid < $point){
+
+		$query = "SELECT * FROM USERS WHERE user_id = '".$bidder_id."'";
+		$initial_point = mysqli_query($mysqli,$query);
+		$row = mysqli_fetch_array($initial_point,MYSQLI_ASSOC);
+		$initial_point = $row['POINTS'];
+
+		if ($initial_point >= $point) {
+			$query = "UPDATE BIDS SET points='".$point."' WHERE bid_id = '".$bid_id."'";
+			$result = mysqli_query($mysqli,$query);
+
+			if ($result) {
+				$current_point = $initial_point - $point;
+				$query = "UPDATE USERS SET points='".$current_point."' WHERE user_id = '".$bidder_id."'";
+				$result = mysqli_query($mysqli,$query);
+				return $result;
+			}
+		}
+	}
+	return FALSE;
+}
 
 function deleteBid($bid_id) {
 
@@ -300,13 +333,29 @@ function deleteBid($bid_id) {
 	$password = "";
 	$dbname = "cs2102";
 
+	$bidder_id = $_SESSION['user'];
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query = "DELETE FROM BIDS WHERE bid_id=".$bid_id."";
-	mysqli_query($mysqli, $query);
-	$result = mysqli_affected_rows($mysqli);
+	$query = "SELECT * FROM BIDS WHERE bid_id = '".$bid_id."'";
+	$bid = mysqli_query($mysqli,$query);
+	$row = mysqli_fetch_array($bid,MYSQLI_ASSOC);
+	$bid = $row['POINTS'];
 
-	return $result;
+	$query = "DELETE FROM BIDS WHERE bid_id='".$bid_id."'";
+	$result = mysqli_query($mysqli, $query);
+	if ($result) {
+		$query = "SELECT * FROM USERS WHERE user_id = '".$bidder_id."'";
+		$initial_point = mysqli_query($mysqli,$query);
+		$row = mysqli_fetch_array($initial_point,MYSQLI_ASSOC);
+		$inital_point = $row['POINTS'];
+
+		$current_point = $inital_point + $bid;
+		$query = "UPDATE USERS SET points='".$current_point."' WHERE user_id = '".$bidder_id."'";
+		mysqli_query($mysqli,$query);
+
+		$affected = mysqli_affected_rows($mysqli);
+		return $affected;
+	}
 }
 
 function addBids($auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bid_return_time,$bid_pickup){
@@ -317,17 +366,30 @@ function addBids($auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bi
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$bid_bidderid = $_SESSION['user'];
+	$bidder_id = $_SESSION['user'];
 	$bid_time_created = date('Y-m-d H:i:s');
 
-	$query = "INSERT INTO BIDS (auctions, bidder_id, product_id, points, time_created, borrow_time, return_time, pickup) VALUES (?, $bid_bidderid, ?, ?, ('$bid_time_created'), ?, ?, ?)";
+	$query = "SELECT * FROM USERS WHERE user_id = '".$bidder_id."'";
+	$initial_point = mysqli_query($mysqli,$query);
+	$row = mysqli_fetch_array($initial_point,MYSQLI_ASSOC);
+	$inital_point = $row['POINTS'];
 
-	$stmt = $mysqli->prepare($query);
-	$stmt->bind_param("iiisss", $auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bid_return_time,$bid_pickup);
-	$stmt->execute();
-	$stmt->close();
-	$result = $mysqli->affected_rows;
-	return $result;
+	if ($inital_point >= $bid_points){
+		$query = "INSERT INTO BIDS (auctions, bidder_id, product_id, points, time_created, borrow_time, return_time, pickup) VALUES (?, $bidder_id, ?, ?, ('$bid_time_created'), ?, ?, ?)";
+		$stmt = $mysqli->prepare($query);
+		$stmt->bind_param("iiisss", $auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bid_return_time,$bid_pickup);
+		$stmt->execute();
+		$stmt->close();
+
+		$current_point = $inital_point + $bid_points;
+		$query = "UPDATE USERS SET points='".$current_point."' WHERE user_id = '".$bidder_id."'";
+		mysqli_query($mysqli,$query);
+
+		$result = $mysqli->affected_rows;
+		return $result;
+	} else {
+		return FALSE;
+	}
 }
 
 ################## All Products ####################
