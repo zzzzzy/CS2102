@@ -39,6 +39,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	</script>
 <!-- //end-smoth-scrolling -->
 <!-- the jScrollPane script -->
+
 <script type="text/javascript" src="js/jquery.jscrollpane.min.js"></script>
 		<script type="text/javascript" id="sourcecode">
 			$(function()
@@ -72,10 +73,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					    <!--/.navbar-header-->
 					 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					        <ul class="nav navbar-nav">
-					        	   <li><a href="all_products.html">All PRODUCTS</a></li>
-											 <li><a href="my_products.html">MY PRODUCTS</a></li>
-											 <li><a href="my_auctions.html">MY AUCTIONS</a></li>
-											 <li><a href="my_bids.html">MY BIDS</a></li>
+					        	   <li><a href="all_products.php">All PRODUCTS</a></li>
+											 <li><a href="my_products.php">MY PRODUCTS</a></li>
+											 <li><a href="my_auctions.php">MY AUCTIONS</a></li>
+											 <li><a href="my_bids.php">MY BIDS</a></li>
 
 					        </ul>
 					    </div>

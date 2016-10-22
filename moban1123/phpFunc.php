@@ -74,6 +74,29 @@ function logout() {
 
 ################## My items ####################
 
+function addUser($user_name, $email, $phone, $password, $address) {
+// User: Function to add new user
+
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$user_date_joined = date('Y-m-d H:i:s');
+	$points = 500;
+
+	$query = "INSERT INTO USERS (user_name, email, phone, password, points, address, date_joined) VALUES (?,?,?,?, $points,?, ('$user_date_joined'))";
+
+	$stmt = $mysqli->prepare($query);
+	$stmt->bind_param("sssss", $user_name, $email, $phone, $password, $address);
+	$stmt->execute();
+	$stmt->close();
+	$result = $mysqli->affected_rows;
+	return $result;
+}
+
 function retrieveUser($user) {
 // User: Function to retrieve current user
 
@@ -305,7 +328,6 @@ function updateBid($bid_id,$point) {
 	$initial_bid = $row['POINTS'];
 
 	if ($initial_bid < $point){
-
 		$query = "SELECT * FROM USERS WHERE user_id = '".$bidder_id."'";
 		$initial_point = mysqli_query($mysqli,$query);
 		$row = mysqli_fetch_array($initial_point,MYSQLI_ASSOC);
@@ -347,9 +369,9 @@ function deleteBid($bid_id) {
 		$query = "SELECT * FROM USERS WHERE user_id = '".$bidder_id."'";
 		$initial_point = mysqli_query($mysqli,$query);
 		$row = mysqli_fetch_array($initial_point,MYSQLI_ASSOC);
-		$inital_point = $row['POINTS'];
+		$initial_point = $row['POINTS'];
 
-		$current_point = $inital_point + $bid;
+		$current_point = $initial_point + $bid;
 		$query = "UPDATE USERS SET points='".$current_point."' WHERE user_id = '".$bidder_id."'";
 		mysqli_query($mysqli,$query);
 
@@ -358,11 +380,19 @@ function deleteBid($bid_id) {
 	}
 }
 
-function addBids($auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bid_return_time,$bid_pickup){
+function addBids($auction_id, $bid_product_id, $bid_points, $date_range, $bid_pickup){
 	$host = "localhost";
 	$username = "root";
 	$password = "";
 	$dbname = "cs2102";
+
+	$string = explode('-',$date_range);
+
+	$starttimestamp = strtotime($string[0]);
+	$start_time = date("Y-m-d H:i:s", $starttimestamp);
+
+	$endtimestamp = strtotime($string[1]);
+	$end_time = date("Y-m-d H:i:s", $endtimestamp);
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
@@ -372,16 +402,16 @@ function addBids($auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bi
 	$query = "SELECT * FROM USERS WHERE user_id = '".$bidder_id."'";
 	$initial_point = mysqli_query($mysqli,$query);
 	$row = mysqli_fetch_array($initial_point,MYSQLI_ASSOC);
-	$inital_point = $row['POINTS'];
+	$initial_point = $row['POINTS'];
 
-	if ($inital_point >= $bid_points){
+	if ($initial_point >= $bid_points){
 		$query = "INSERT INTO BIDS (auctions, bidder_id, product_id, points, time_created, borrow_time, return_time, pickup) VALUES (?, $bidder_id, ?, ?, ('$bid_time_created'), ?, ?, ?)";
 		$stmt = $mysqli->prepare($query);
-		$stmt->bind_param("iiisss", $auction_id, $bid_product_id, $bid_points, $bid_borrow_time,$bid_return_time,$bid_pickup);
+		$stmt->bind_param("iiisss", $auction_id, $bid_product_id, $bid_points, $start_time,$end_time,$bid_pickup);
 		$stmt->execute();
 		$stmt->close();
 
-		$current_point = $inital_point + $bid_points;
+		$current_point = $initial_point - $bid_points;
 		$query = "UPDATE USERS SET points='".$current_point."' WHERE user_id = '".$bidder_id."'";
 		mysqli_query($mysqli,$query);
 
@@ -407,6 +437,31 @@ function retrieveAvailProducts() {
 	$result = mysqli_query($mysqli, $query);
 	return $result;
 }
+
+function getCategories() {
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+	$query = "SELECT DISTINCT CATE FROM PRODUCTS";
+	$result = mysqli_query($mysqli, $query);
+	return $result;
+}
+
+function getProductsFromCategories($cate) {
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+	$query = "SELECT a.*, p.*, u.* FROM AUCTIONS a, PRODUCTS p, USERS u WHERE p.cate = '$cate' AND a.product_id = p.product_id AND p.is_available =True AND p.owner_id = u.user_id";
+	$result = mysqli_query($mysqli, $query);
+	return $result;
+}
+
 
 ## Destroy each session
 #session_destroy();

@@ -25,8 +25,8 @@ include('header.php');
 		?>
 		<div class="alert alert-info">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
-			<h4>You are in!</h4><!-- Message -->
-			<?php echo 'If this is not your account, <a href="logout.php">please click here to switch accounts</a>'; ?>
+			<h4>Login Succesfully!</h4><!-- Message -->
+			<?php echo 'Click <a href="my_products.php">here to start adding your items</a>'; ?>
 		</div>
 		<?php
 

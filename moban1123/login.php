@@ -82,8 +82,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			?>
 		<div class="alert alert-info">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
-			<h4>You are in!</h4><!-- Message -->
-			<?php echo 'If this is not your account, <a href="logout.php">please click here to switch accounts</a>'; ?>
+			<h4>Login Succesfully!</h4><!-- Message -->
+			<?php echo 'Click <a href="my_products.php">here to view your items</a>'; ?>
 		</div>
 		<?php
 
@@ -107,7 +107,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		  </div>
 		  <div class="col-md-6 login-right">
 		  	 <h3>New User? Create an Account</h3>
-		     <a href="signup.html" class="login-btn">Create an Account </a>
+		  	 <?php $_SESSION["signup"] = null; ?>
+		     <a href="signup.php" class="login-btn">Create an Account </a>
 		  </div>
 		  <div class="clearfix"> </div>
 		  <?php }?>
