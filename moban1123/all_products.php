@@ -155,7 +155,7 @@ if (isset($_POST['search_text'])){
                   <div class="form-group">
                     <label class="col-sm-4 control-label">Available Time</label>
                     <div class="col-sm-8 control-label">
-                      <p> <?php echo $row['START_TIME_AVAIL'];?> - <?php echo $row['START_TIME_AVAIL'];?> </p>
+                      <p> <?php echo $row['START_TIME_AVAIL'];?> - <?php echo $row['END_TIME_AVAIL'];?> </p>
                     </div>
                   </div>
                   <div class="form-group">
