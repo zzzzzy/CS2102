@@ -42,7 +42,7 @@
 ?>
 
 <!--product start here-->
-<div class="auctions">
+<div class="auctions" style="padding-top:95px">
 	<div class="container">
 		<div class="product-main">
       <div class=" product-menu-bar">
@@ -53,13 +53,13 @@
               <div class="row1 scroll-pane">
                 <form name="cate" method='POST'>
                   <div class="col col-4">
-                    <label class="checkbox"><a class="tab-header" href="#A" data-toggle="tab">All</a></label>
+                    <label class="checkbox"><i></i><a class="tab-header" href="#A" data-toggle="tab">All</a></label>
                   </div>
                   <div class="col col-4">
-                    <label class="checkbox"><a class="tab-header" href="#B" data-toggle="tab">Open</a></label>
+                    <label class="checkbox"><i></i><a class="tab-header" href="#B" data-toggle="tab">Open</a></label>
                   </div>
                   <div class="col col-4">
-                    <label class="checkbox"><a class="tab-header" href="#C" data-toggle="tab">Close</a></label>
+                    <label class="checkbox"><i></i><a class="tab-header" href="#C" data-toggle="tab">Close</a></label>
                   </div>
                 </form>
               </div>
@@ -70,19 +70,19 @@
       <div class="col-md-9 product-block">
         <!-- Tab panes -->
         <div class="tab-content">
-            <div class="tab-pane fade in active auction-content" id="A">
+            <div class="tab-pane fade in active auction-content" style="padding-top:0px !important" id="A">
                 <?php
                   $rows = mysqli_fetch_all($userAuctions, MYSQLI_ASSOC);
                   print_content_all($rows);
                  ?>
             </div>
-            <div class="tab-pane fade in auction-content" id="B">
+            <div class="tab-pane fade in auction-content" style="padding-top:0px !important" id="B">
              <?php
                   $rows = mysqli_fetch_all($openAuctions, MYSQLI_ASSOC);
                   print_content_open($rows);
               ?>
             </div>
-            <div class="tab-pane fade in auction-content" id="C">
+            <div class="tab-pane fade in auction-content" style="padding-top:0px !important" id="C">
               <?php
                   $rows = mysqli_fetch_all($closeAuctions, MYSQLI_ASSOC);
                   print_content_close($rows);
