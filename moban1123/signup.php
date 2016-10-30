@@ -5,6 +5,7 @@ include('phpFunc.php');
 if(isset($_POST['Username'])) {
 
 	# User trying to sign up.
+	#print_r($_POST['Pwd']);
 	$result = addUser($_POST['Username'], $_POST['Email'], $_POST['Phone'], $_POST['Pwd'], $_POST['Address']);
 
 	if($result==0) {
@@ -93,8 +94,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				<input type="text" class="no-margin" placeholder="Email" id="Email" name="Email" required>
 				<input type="text" placeholder="Phone" id="Phone" name="Phone" required>
 				<input type="text" class="no-margin" placeholder="Address" id="Address" name="Address" required>
-				<input type="password" placeholder="Password" id="Password" name="Pwd" required=""/>
-				<input type="password" class="no-margin" placeholder="Confirm Password" required=""/>
+				<input type="password" placeholder="Password" id="Pwd" name="Pwd" required>
+				<input type="password" class="no-margin" placeholder="Confirm Password" required>
 				<span class="checkbox1">
 				 <label class="checkbox"><input type="checkbox" name="" checked=""><i> </i>i agree terms of use and privacy</label>
 			   </span>
