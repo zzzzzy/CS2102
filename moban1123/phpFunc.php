@@ -170,7 +170,17 @@ function retrieveUserItemsByCategories($user,$cate) {
 	return $result;
 }
 
+function retrieveAllUserItemsByCategories($cate) {
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
 
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+	$query =  "SELECT * FROM PRODUCTS p WHERE p.cate='".$cate."'";
+	$result = mysqli_query($mysqli, $query);
+	return $result;
+}
 function deleteUserItem($item_id) {
 		// Admin: Function to delete the camera
 
