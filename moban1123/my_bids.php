@@ -36,6 +36,7 @@
 }
 ?>
 
+
 	<!--product start here-->
 <div class="product">
 	<div class="container">
@@ -117,7 +118,9 @@
                 <div class="form-group">
                   <label class="col-sm-4 control-label">Status: </label>
                   <div class="col-sm-8 control-label">
-	                  <p> <?php echo $row['STATUS'];?></p>
+	                  <p> <?php if ($row['STATUS']==1){echo 'Available';} 
+	                             else {echo 'Not Available';};?> 
+	                  </p>
                   </div>
                 </div>
 
@@ -182,9 +185,9 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-											<label class="col-sm-4 control-label">Owner</label>
+											<label class="col-sm-4 control-label">Owner ID:</label>
 											<div class="col-sm-8 control-label">
-												<p> <?php echo $row['USER_NAME'];?> (ID: <?php echo $row['USER_ID'];?>)</p>
+												<p> <?php echo $row['OWNER_ID'];?></p>
 											</div>
 										</div>
                                         <div class="form-group">
