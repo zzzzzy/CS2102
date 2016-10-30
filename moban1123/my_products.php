@@ -205,8 +205,14 @@ if (isset($_POST['cate_button'])){
 										<div class="modal-footer">
 											<button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
 											<button type="submit" name="update_product" class="btn btn-success btn-round">Update</button>
-											<button type="submit" name="delete_product" class="btn btn-success btn-round">Delete</button>
-											<button type="button" name="create_auction" class="btn btn-success btn-round" data-dismiss="modal" data-toggle="modal" data-target="#addAuction_<?php echo $row['PRODUCT_ID'];?>">Create an Auction</button>
+											<?php
+											if (ableToDelete($row['PRODUCT_ID'])) { ?>
+												<button type="submit" name="delete_product" class="btn btn-success btn-round">Delete</button>
+											<?php } ?>
+											<?php
+											if (!hasAuction($row['PRODUCT_ID'])) { ?>
+												<button type="button" name="create_auction" class="btn btn-success btn-round" data-dismiss="modal" data-toggle="modal" data-target="#addAuction_<?php echo $row['PRODUCT_ID'];?>">Create an Auction</button>
+											<?php } ?>
 										</div>
 									</form>
 								</div>

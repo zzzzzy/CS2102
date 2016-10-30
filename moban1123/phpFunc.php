@@ -40,8 +40,8 @@ function login($user, $pwd) {
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-    $query = "SELECT user_id FROM USERS WHERE email =? AND password =?";
-   	$stmt = $mysqli->prepare($query);
+  $query = "SELECT user_id FROM USERS WHERE email =? AND password =?";
+  $stmt = $mysqli->prepare($query);
 	if($stmt == FALSE) { die($mysqli->error); }
 	$stmt->bind_param("ss", $user, $pwd);
 
@@ -200,6 +200,23 @@ function deleteUserItem($item_id) {
 	return $result;
 }
 
+function ableToDelete($item_id) {
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query = "SELECT * FROM AUCTIONS WHERE product_id = ".$item_id."";
+	$result = mysqli_query($mysqli, $query);
+  if (mysqli_num_rows($result) == 0){
+		return True;
+	} else {
+		return False;
+	}
+}
+
 function addUserItem($item_title,$item_description,$item_cate,$item_pic){
 	$host = "localhost";
 	$username = "root";
@@ -238,6 +255,23 @@ function editUserItem($item_id,$item_title,$item_description,$item_cate,$item_pi
 	$result = mysqli_affected_rows($mysqli);
 
 	return $result;
+}
+
+function hasAuction($item_id){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query = "SELECT * FROM AUCTIONS WHERE product_id = ".$item_id." AND status = True";
+	$result = mysqli_query($mysqli, $query);
+	if(mysqli_num_rows($result)!=0){
+		return True;
+	} else {
+		return False;
+	}
 }
 
 ################## My auctions ####################
@@ -305,10 +339,49 @@ function closeAuction($auction_id){
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query = "UPDATE AUCTIONS SET status = False WHERE auction_id = '".$auction_id."'";
-
+	$query = "UPDATE AUCTIONS SET status = False WHERE auction_id = ".$auction_id."";
 	mysqli_query($mysqli, $query);
 
+	$highest = retrieveHighestBid($auction_id);
+	$highest_arr = mysqli_fetch_array($highest, MYSQLI_ASSOC);
+	$highest_all = mysqli_fetch_all($highest, MYSQLI_ASSOC);
+	$success = $highest_arr['BID_ID'];
+	$earliest = $highest_arr['TIME_CREATED'];
+	foreach($highest_all as $highest_bid) {
+		$time = $highest_bid['TIME_CREATED'];
+		$id = $highest_bid['BID_ID'];
+		if ($time < $earliest) {
+			$earliest = $time;
+			$success = $id;
+		}
+	}
+
+	$query = "UPDATE BIDS SET status='Success' WHERE bid_id = ".$success."";
+	$result = mysqli_query($mysqli,$query);
+
+	$query = "SELECT * FROM BIDS WHERE time_created <> '".$earliest."' AND auctions = ".$auction_id."";
+	$result = mysqli_query($mysqli, $query);
+	$allbids = mysqli_fetch_all($result,MYSQLI_ASSOC);
+
+	foreach ($allbids as $bid) {
+		$bidId = $bid['BID_ID'];
+		$query = "UPDATE BIDS SET status='Failure' WHERE bid_id = ".$bidId."";
+		$result = mysqli_query($mysqli,$query);
+
+		$query = "SELECT b.*, u.user_id FROM BIDS b, USERS u WHERE b.bidder_id = u.user_id AND b.bid_id = ".$bidId."";
+		$bid_point = mysqli_query($mysqli, $query);
+		$row = mysqli_fetch_array($bid_point,MYSQLI_ASSOC);
+		$bid_point = $row['POINTS'];
+
+		$bidder = $row['user_id'];
+		$query = "SELECT * FROM USERS u WHERE u.user_id = ".$bidder."";
+		$initial_point = mysqli_query($mysqli, $query);
+		$row = mysqli_fetch_array($initial_point,MYSQLI_ASSOC);
+		$initial_point = $row['POINTS'];
+		$current_point = $initial_point + $bid_point;
+		$query = "UPDATE USERS SET points='".$current_point."' WHERE user_id = ".$bidder."";
+		$result = mysqli_query($mysqli,$query);
+	}
 }
 
 function retrieveAllAuctions($user){
