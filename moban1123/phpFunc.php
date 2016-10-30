@@ -81,7 +81,9 @@ function isAdmin($user){
 
 	$query = "SELECT ADMIN FROM USERS u WHERE u.user_id= '".$user."'";
 	$result = mysqli_query($mysqli, $query);
-	if ($result == TRUE){
+	$result_row = mysqli_fetch_all($result,MYSQLI_ASSOC)[0];
+	$result_admin = $result_row['ADMIN'];
+	if ($result_admin == TRUE){
 		return 1;
 	}
 	else{
