@@ -2,8 +2,12 @@
   # php logic file
 include('phpFunc.php');
 $userInfo = retrieveUser($_SESSION['user']);
-
-$userItems = retrieveUserItems($_SESSION["user"]);
+if (isAdmin($_SESSION['user'])){
+	$userItems = retrieveAllUserItems();
+}
+else{
+	$userItems = retrieveUserItems($_SESSION["user"]);
+}
 
 include('header.php');
 

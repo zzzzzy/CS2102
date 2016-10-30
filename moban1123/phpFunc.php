@@ -71,7 +71,23 @@ function logout() {
 	$_SESSION["user"] = null;
 }
 
+function isAdmin($user){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
 
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query = "SELECT ADMIN FROM USERS u WHERE u.user_id= '".$user."'";
+	$result = mysqli_query($mysqli, $query);
+	if ($result == TRUE){
+		return 1;
+	}
+	else{
+		return 0;
+	}
+}
 ################## My items ####################
 
 function addUser($user_name, $email, $phone, $password, $address) {
@@ -122,6 +138,21 @@ function retrieveUserItems($user) {
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 	$query =  "SELECT * FROM PRODUCTS p, USERS u WHERE p.owner_id = u.user_id AND u.user_id= '".$user."'";
+	$result = mysqli_query($mysqli,$query);
+
+	return $result;
+}
+
+function retrieveAllUserItems() {
+// User: Function to retrieve all items of the user
+
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+	$query =  "SELECT * FROM PRODUCTS";
 	$result = mysqli_query($mysqli,$query);
 
 	return $result;
