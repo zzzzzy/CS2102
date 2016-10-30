@@ -71,6 +71,23 @@ function logout() {
 	$_SESSION["user"] = null;
 }
 
+function isAdmin($user){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query = "SELECT ADMIN FROM USERS u WHERE u.user_id= '".$user."'";
+	$result = mysqli_query($mysqli, $query);
+	if ($result == TRUE){
+		return 1;
+	}
+	else{
+		return 0;
+	}
+}
 
 ################## My items ####################
 
@@ -160,7 +177,6 @@ function retrieveAllUserItemsByCategories($cate) {
 	$username = "root";
 	$password = "";
 	$dbname = "cs2102";
->>>>>>> origin/master
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 	$query =  "SELECT * FROM PRODUCTS p WHERE p.cate='".$cate."'";
@@ -230,10 +246,8 @@ function retrieveAuctions($user){
 	$dbname = "cs2102";
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
-
 	$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p, BIDS b, USERS u WHERE a.product_id = p.product_id AND p.owner_id = u.user_id AND b.auctions = a.auction_id AND b.product_id = p.product_id AND u.user_id= '".$user."' AND b.points >= (SELECT max(b1.points) FROM AUCTIONS a1, BIDS b1 WHERE b1.auctions = a1.auction_id AND a.auction_id = a1.auction_id)";
 	$result = mysqli_query($mysqli,$query);
-
 	return $result;
 }
 
@@ -309,6 +323,20 @@ function retrieveOpenAuctions($user){
 	return $result;
 }
 
+function retrieveAllOpenAuctions(){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p WHERE a.product_id = p.product_id AND a.status = True";
+	$result = mysqli_query($mysqli,$query);
+
+	return $result;
+}
+
 function retrieveClosedAuctions($user){
 	$host = "localhost";
 	$username = "root";
@@ -318,6 +346,34 @@ function retrieveClosedAuctions($user){
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
 	$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p, USERS u WHERE a.product_id = p.product_id AND p.owner_id = u.user_id AND u.user_id= '".$user."' AND a.status = False";
+	$result = mysqli_query($mysqli,$query);
+
+	return $result;
+}
+
+function retrieveAllClosedAuctions(){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p WHERE a.product_id = p.product_id AND a.status = False";
+	$result = mysqli_query($mysqli,$query);
+
+	return $result;
+}
+
+function retrieveAllUserAuctions(){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p WHERE a.product_id = p.product_id";
 	$result = mysqli_query($mysqli,$query);
 
 	return $result;

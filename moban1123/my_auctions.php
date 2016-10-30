@@ -17,18 +17,27 @@
   } else {
     # retrieve user info
     $userInfo = retrieveUser($_SESSION['user']);
+    $admin = isAdmin($_SESSION['user']);
     # retrieve user items
-    $userAuctions = retrieveAuctions($_SESSION["user"]);
-    $openAuctions = retrieveOpenAuctions($_SESSION["user"]);
-    $closeAuctions = retrieveClosedAuctions($_SESSION["user"]);
+    if ($admin){
+      $userAuctions = retrieveAllUserAuctions($_SESSION["user"]);
+      $openAuctions = retrieveAllOpenAuctions($_SESSION["user"]);
+      $closeAuctions = retrieveAllClosedAuctions($_SESSION["user"]);
+    }
+    else{
+      $userAuctions = retrieveAuctions($_SESSION["user"]);
+      $openAuctions = retrieveOpenAuctions($_SESSION["user"]);
+      $closeAuctions = retrieveClosedAuctions($_SESSION["user"]);
+    }
+
     if (isset($_POST['close_auction'])) {
-      $result = closeAuction($_POST['auction_id']); 
+      $result = closeAuction($_POST['auction_id']);
       if ($result == 0) {
         $errmsg = 'Please try again. :(';
       } else {
         $successmsg ='Please click <a href="my_auctions.php">here</a> to refresh.';
       }
-    } 
+    }
   }
   include('header.php');
 ?>
@@ -66,19 +75,19 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <div class="tab-pane fade in active auction-content" id="A">
-                <?php 
+                <?php
                   $rows = mysqli_fetch_all($userAuctions, MYSQLI_ASSOC);
                   print_content($rows);
                  ?>
             </div>
             <div class="tab-pane fade auction-content" id="B">
-             <?php 
+             <?php
                   $rows = mysqli_fetch_all($openAuctions, MYSQLI_ASSOC);
                   print_content($rows);
               ?>
             </div>
             <div class="tab-pane fade auction-content" id="C">
-              <?php 
+              <?php
                   $rows = mysqli_fetch_all($closeAuctions, MYSQLI_ASSOC);
                   print_content($rows);
                ?>
@@ -91,7 +100,7 @@
 
 <!--product end here-->
 
-<?php 
+<?php
 function print_content($rows) {
   foreach($rows as $row) {
     echo '
@@ -106,7 +115,7 @@ function print_content($rows) {
             <h3 style="color:white">'. $row['TITLE'] .'</h3>
             <p> Category </p>';
 
-            //<p> '.$row['CATEGORY'].'</p> 
+            //<p> '.$row['CATEGORY'].'</p>
     echo '
           </div>
         </div>
@@ -152,7 +161,7 @@ function print_modal($row) {
                 <div class="form-group">
                   <label class="col-sm-4 control-label">Product Available: </label>
                   <div class="col-sm-8 control-label">
-                  <p> '.$row['START_TIME_AVAIL'].'to 
+                  <p> '.$row['START_TIME_AVAIL'].'to
                   '. $row['END_TIME_AVAIL'].'</p>
                   </div>
                 </div>
