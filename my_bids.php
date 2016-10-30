@@ -24,8 +24,9 @@
     	}
     }
 
-    if (isset($_POST['update_bid'])) {
-    	$result = updataBid($_POST['bid_point']);
+    #NO FUNCTION FOR UPDATING BID
+    if (isset($_POST['change_bid'])) {
+    	$result = updataBID($_POST['daterange'],$_POST['pickup_point'],$_POST['bid_point']);
     	if ($result == 0) {
     		$errmsg = 'Please try again. :(';
     	} 
@@ -35,7 +36,6 @@
     }
 }
 ?>
-
 
 	<!--product start here-->
 <div class="product">
@@ -75,7 +75,7 @@
 								<p>Bidding ID: <?php echo $row['BID_ID'] ;?></p>
 							</div>
 							<div class="srch">
-								<span> Points: <?php echo $row['POINTS'];?></span>
+								<span>25 pts</span>
 							</div>
 						</div>
 					</div>
@@ -118,9 +118,7 @@
                 <div class="form-group">
                   <label class="col-sm-4 control-label">Status: </label>
                   <div class="col-sm-8 control-label">
-	                  <p> <?php if ($row['STATUS']==1){echo 'Available';} 
-	                             else {echo 'Not Available';};?> 
-	                  </p>
+	                  <p> <?php echo $row['STATUS'];?></p>
                   </div>
                 </div>
 
@@ -132,15 +130,24 @@
                 </div>
 
                 <div class="form-group">
+					<label class="col-sm-4">Change Borrow Period</label>
+					<div class="col-sm-8">
+						<input type="text" name="daterange" />
+						<script type="text/javascript">
+						$('input[name="daterange"]').daterangepicker();
+						</script>
+					</div>
+				</div>
+                <div class="form-group">
                   <label class="col-sm-4 control-label">My Favorable Pickup Point: </label>
                   <div class="col-sm-8 control-label">
-	                  <p> <?php echo $row['PICKUP'];?></p>
+	                  <input name="pickup_point" type="text" value="<?php echo $row['BPICKUP'];?>" />
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="col-sm-4 control-label">My Bidding Points: </label>
                   <div class="col-sm-8 control-label">
-	                  <input name="bid_point" type="text" value="<?php echo $row['POINTS'];?>" />
+	                  <input name="bid_point" type="text" value="<?php echo $row['BPOINTS'];?>" />
                   </div>
                 </div> 
               </div>
@@ -185,9 +192,9 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-											<label class="col-sm-4 control-label">Owner ID:</label>
+											<label class="col-sm-4 control-label">Owner</label>
 											<div class="col-sm-8 control-label">
-												<p> <?php echo $row['OWNER_ID'];?></p>
+												<p> <?php echo $row['USER_NAME'];?> (ID: <?php echo $row['USER_ID'];?>)</p>
 											</div>
 										</div>
                                         <div class="form-group">

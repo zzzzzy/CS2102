@@ -17,10 +17,18 @@
   } else {
     # retrieve user info
     $userInfo = retrieveUser($_SESSION['user']);
+    $admin = isAdmin($_SESSION['user']);
     # retrieve user items
-    $userAuctions = retrieveAllAuctions($_SESSION["user"]);
-    $openAuctions = retrieveOpenAuctions($_SESSION["user"]);
-    $closeAuctions = retrieveClosedAuctions($_SESSION["user"]);
+    if ($admin){
+      $userAuctions = retrieveAllUserAuctions($_SESSION["user"]);
+      $openAuctions = retrieveAllOpenAuctions($_SESSION["user"]);
+      $closeAuctions = retrieveAllClosedAuctions($_SESSION["user"]);
+    }
+    else{
+      $userAuctions = retrieveAuctions($_SESSION["user"]);
+      $openAuctions = retrieveOpenAuctions($_SESSION["user"]);
+      $closeAuctions = retrieveClosedAuctions($_SESSION["user"]);
+    }
     if (isset($_POST['close_auction'])) {
       $result = closeAuction($_POST['auction_id']);
       if ($result == 0) {

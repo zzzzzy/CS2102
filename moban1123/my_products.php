@@ -2,7 +2,13 @@
   # php logic file
 include('phpFunc.php');
 $userInfo = retrieveUser($_SESSION['user']);
-$userItems = retrieveUserItems($_SESSION["user"]);
+$admin = isAdmin($_SESSION['user']);
+if ($admin){
+	$userItems = retrieveAllUserItems();
+}
+else{
+	$userItems = retrieveUserItems($_SESSION["user"]);
+}
 
 include('header.php');
 
@@ -63,10 +69,19 @@ if (isset($_POST['update_product'])) {
 }
 
 if (isset($_POST['cate_button'])){
-  if ($_POST['check_list'] != 'All') {
-    $userItems = retrieveUserItemsByCategories($_SESSION["user"],$_POST['check_list']);
-  } else {
-		$userItems = retrieveUserItems($_SESSION["user"]);
+	if ($admin){
+		if ($_POST['check_list'] != 'All') {
+	    $userItems = retrieveAllUserItemsByCategories($_POST['check_list']);
+	  } else {
+			$userItems = retrieveAllUserItems();
+		}
+	}
+	else{
+	  if ($_POST['check_list'] != 'All') {
+	    $userItems = retrieveUserItemsByCategories($_SESSION["user"],$_POST['check_list']);
+	  } else {
+			$userItems = retrieveUserItems($_SESSION["user"]);
+		}
 	}
 }
 ?>
