@@ -128,6 +128,45 @@ function retrieveUserItems($user) {
 }
 
 
+function retrieveAllUserItems() {
+// User: Function to retrieve all items of the user
+
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+	$query =  "SELECT * FROM PRODUCTS";
+	$result = mysqli_query($mysqli,$query);
+
+	return $result;
+}
+
+function retrieveUserItemsByCategories($user,$cate) {
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+	$query =  "SELECT * FROM PRODUCTS p, USERS u WHERE p.owner_id = u.user_id AND u.user_id= '".$user."' AND p.cate='".$cate."'";
+	$result = mysqli_query($mysqli, $query);
+	return $result;
+}
+
+function retrieveAllUserItemsByCategories($cate) {
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+>>>>>>> origin/master
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+	$query =  "SELECT * FROM PRODUCTS p WHERE p.cate='".$cate."'";
+	$result = mysqli_query($mysqli, $query);
+	return $result;
+}
 function deleteUserItem($item_id) {
 		// Admin: Function to delete the camera
 
