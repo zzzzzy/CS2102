@@ -87,7 +87,7 @@ function addUser($user_name, $email, $phone, $password, $address) {
 	$user_date_joined = date('Y-m-d H:i:s');
 	$points = 500;
 
-	$query = "INSERT INTO USERS (user_name, email, phone, password, points, address, date_joined) VALUES (?,?,?,?, $points,?, ('$user_date_joined'))";
+	$query = "INSERT INTO USERS (user_name, email, phone, password, points, address, date_joined, admin) VALUES (?,?,?,?, $points,?, ('$user_date_joined'), FALSE)";
 
 	$stmt = $mysqli->prepare($query);
 	$stmt->bind_param("sssss", $user_name, $email, $phone, $password, $address);

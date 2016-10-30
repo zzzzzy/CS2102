@@ -2,6 +2,7 @@
   # php logic file
 include('phpFunc.php');
 $userInfo = retrieveUser($_SESSION['user']);
+
 $userItems = retrieveUserItems($_SESSION["user"]);
 
 include('header.php');
