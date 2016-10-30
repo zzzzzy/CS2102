@@ -110,7 +110,6 @@ if (isset($_POST['cate_button'])){
 				<div class="col-md-9 product-block">
 
 					<?php
-					$userItems = retrieveUserItems($_SESSION["user"]);
 					$rows = mysqli_fetch_all($userItems,MYSQLI_ASSOC);
 					foreach ($rows as $row) {?>
 						<div class="col-md-4 home-grid">
