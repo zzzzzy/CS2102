@@ -10,10 +10,20 @@
 <?php
   # php logic file
   include('phpFunc.php');
-
+  include('header.php');
   # check if user is logged in
   if (!hasLogin()) {
-    $errmsg = '<a href="login.php">Login</a> to view your auctions.';
+    $errmsg = '<a href="login.php">Login</a> to view your auctions.';?>
+    <div class="login">
+    	<div class="container">
+    		<div class="signin-main">
+    <div class="alert alert-info">
+    <?php echo $errmsg;?>
+    </div>
+  </div>
+  </div>
+  </div>
+    <?php
   } else {
     # retrieve user info
     $userInfo = retrieveUser($_SESSION['user']);
@@ -37,8 +47,8 @@
         $successmsg ='Please click <a href="my_auctions.php">here</a> to refresh.';
       }
     }
-  }
-  include('header.php');
+
+
 ?>
 
 <!--product start here-->
@@ -97,6 +107,7 @@
 <!--product end here-->
 
 <?php
+};
 function print_content_all($rows) {
   foreach($rows as $row) {
     echo '
