@@ -61,7 +61,7 @@
 			  <div class="col-md-9 product-block">
 
 			  	<?php
-					foreach ($rows as $row) { print_r($row);?>
+					foreach ($rows as $row) {?>
 					<div class="col-md-4 home-grid">
 						<div class="home-product-main">
 							<div class="home-product-top">
@@ -74,7 +74,7 @@
 								<p>Bidding ID: <?php echo $row['BID_ID'] ;?></p>
 							</div>
 							<div class="srch">
-								<span>25 pts</span>
+								<span> Points: <?php echo $row['POINTS'];?></span>
 							</div>
 						</div>
 					</div>
