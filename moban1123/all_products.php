@@ -1,7 +1,7 @@
 <?php
   # php logic file
 include('phpFunc.php');
-
+include('phpFunc2.php');
 # check if user is logged in
 if(!hasLogin()) {
   $errmsg = '<a href="login.php">Login</a> to view the products.';
@@ -26,6 +26,12 @@ $allProducts = retrieveAvailProducts();
 if (isset($_POST['check_list'])){
   if ($_POST['check_list'] != 'All') {
     $allProducts = getProductsFromCategories($_POST['check_list']);
+  }
+}
+
+if (isset($_POST['search_text'])){
+  if ($_POST['search_text'] != '') {
+    $allProducts = search($_POST['search_text']);
   }
 }
   # html <HEAD>, starts <BODY> and top menu of page
@@ -68,6 +74,13 @@ include('header.php');
   						</div>
   			  </div>
           <!-- end: Product Categories -->
+          <div class="search">
+            <div class="search-text">
+                <form method="POST">
+                  <input class="serch" name = 'search_text' type="text" value="Search" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search';}"/>
+                </form>
+            </div>
+          </div>
     <div class="col-md-9 product-block">
 
     <?php
