@@ -25,7 +25,7 @@
       $closeAuctions = retrieveAllClosedAuctions($_SESSION["user"]);
     }
     else{
-      $userAuctions = retrieveAuctions($_SESSION["user"]);
+      $userAuctions = retrieveAllAuctions($_SESSION["user"]);
       $openAuctions = retrieveOpenAuctions($_SESSION["user"]);
       $closeAuctions = retrieveClosedAuctions($_SESSION["user"]);
     }
