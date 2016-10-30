@@ -67,7 +67,7 @@
     }
 
     if (isset($_POST['update_bid'])) {
-    	$result = updataBid($_POST['bid_point']);
+    	$result = updateBid($_POST['bid_id'],$_POST['bid_point']);
     	if ($result == 0) {
     		$errmsg = 'Please try again. :(';
     	}
@@ -192,11 +192,12 @@
 	                  <input name="bid_point" type="text" value="<?php echo $row['POINTS'];?>" />
                   </div>
                 </div>
+                <input type="hidden" name="bid_id" value="<?php echo $row['BID_ID'];?>" />
               </div>
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                <button type="submit" name="change_bid" class="btn btn-success btn-round">Update</button>
+                <button type="submit" name="update_bid" class="btn btn-success btn-round">Update</button>
                 <button type="submit" name="delete_bid" class="btn btn-success btn-round">Delete</button>
                 <button type="button" name="moreInfo" class="btn btn-success btn-round" data-dismiss="modal" data-toggle="modal" data-target="#more_info">More Product info</button>
               </div>

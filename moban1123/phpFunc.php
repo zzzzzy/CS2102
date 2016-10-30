@@ -510,24 +510,24 @@ function updateBid($bid_id,$point) {
 	$bidder_id = $_SESSION['user'];
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query = "SELECT * FROM BIDS WHERE bid_id = '".$bid_id."'";
+	$query = "SELECT * FROM BIDS WHERE bid_id = ".$bid_id."";
 	$initial_bid = mysqli_query($mysqli,$query);
 	$row = mysqli_fetch_array($initial_bid,MYSQLI_ASSOC);
 	$initial_bid = $row['POINTS'];
 
 	if ($initial_bid < $point){
-		$query = "SELECT * FROM USERS WHERE user_id = '".$bidder_id."'";
+		$query = "SELECT * FROM USERS WHERE user_id = ".$bidder_id."";
 		$initial_point = mysqli_query($mysqli,$query);
 		$row = mysqli_fetch_array($initial_point,MYSQLI_ASSOC);
 		$initial_point = $row['POINTS'];
 
 		if ($initial_point >= $point) {
-			$query = "UPDATE BIDS SET points='".$point."' WHERE bid_id = '".$bid_id."'";
+			$query = "UPDATE BIDS SET points=".$point." WHERE bid_id = ".$bid_id."";
 			$result = mysqli_query($mysqli,$query);
 
 			if ($result) {
 				$current_point = $initial_point - $point;
-				$query = "UPDATE USERS SET points='".$current_point."' WHERE user_id = '".$bidder_id."'";
+				$query = "UPDATE USERS SET points=".$current_point." WHERE user_id = ".$bidder_id."";
 				$result = mysqli_query($mysqli,$query);
 				return $result;
 			}
