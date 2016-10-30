@@ -198,7 +198,7 @@ function editUserItem($item_id,$item_title,$item_description,$item_cate,$item_pi
 }
 
 ################## My auctions ####################
-function retrieveAuctions($user){
+function retrieveHighestBid($auction_id){
 	## highest bidding points
 	$host = "localhost";
 	$username = "root";
@@ -207,7 +207,8 @@ function retrieveAuctions($user){
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p, BIDS b, USERS u WHERE a.product_id = p.product_id AND p.owner_id = u.user_id AND b.auctions = a.auction_id AND b.product_id = p.product_id AND u.user_id= '".$user."' AND b.points >= (SELECT max(b1.points) FROM AUCTIONS a1, BIDS b1 WHERE b1.auctions = a1.auction_id AND a.auction_id = a1.auction_id)";
+	#$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p, BIDS b, USERS u WHERE a.product_id = p.product_id AND p.owner_id = u.user_id AND b.auctions = a.auction_id AND a.auction_id = '".$auction_id."' AND b.product_id = p.product_id AND u.user_id= '".$user."' AND b.points >= (SELECT max(b1.points) FROM AUCTIONS a1, BIDS b1 WHERE b1.auctions = a1.auction_id AND a.auction_id = a1.auction_id)";
+	$query =  "SELECT * FROM AUCTIONS a, BIDS b WHERE b.auctions = a.auction_id AND a.auction_id = '".$auction_id."' AND b.points >= (SELECT max(b1.points) FROM AUCTIONS a1, BIDS b1 WHERE b1.auctions = a1.auction_id AND a.auction_id = a1.auction_id)";
 	$result = mysqli_query($mysqli,$query);
 
 	return $result;
@@ -267,6 +268,20 @@ function closeAuction($auction_id){
 
 	mysqli_query($mysqli, $query);
 
+}
+
+function retrieveAllAuctions($user){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query =  "SELECT * FROM AUCTIONS a, PRODUCTS p, USERS u WHERE a.product_id = p.product_id AND p.owner_id = u.user_id AND u.user_id= '".$user."'";
+	$result = mysqli_query($mysqli,$query);
+
+	return $result;
 }
 
 function retrieveOpenAuctions($user){
@@ -448,7 +463,8 @@ function retrieveAvailProducts() {
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
 
-	$query = "SELECT a.*, p.*, u.* FROM AUCTIONS a, PRODUCTS p, USERS u WHERE a.product_id = p.product_id AND p.is_available =True AND p.owner_id = u.user_id";
+	$user = $_SESSION['user'];
+	$query = "SELECT a.*, p.*, u.* FROM AUCTIONS a, PRODUCTS p, USERS u WHERE a.product_id = p.product_id AND p.is_available =True AND p.owner_id = u.user_id AND u.user_id <> '".$user."'";
 	$result = mysqli_query($mysqli, $query);
 	return $result;
 }
