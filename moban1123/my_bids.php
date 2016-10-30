@@ -2,16 +2,58 @@
 <?php
   # php logic file
   include('phpFunc.php');
+  include('phpFunc2.php');
   include('header.php');
 
   # check if user is logged in
   if (!hasLogin()) {
-    $errmsg = '<a href="login.php">Login</a> to view your bids.';
+    $errmsg = '<a href="login.php">Login</a> to view your bids.';?>
+    <div class="login">
+      <div class="container">
+        <div class="signin-main">
+    <div class="alert alert-info">
+    <?php echo $errmsg;?>
+    </div>
+  </div>
+  </div>
+  </div>
+    <?php
   } else {
+
+
     # retrieve user info
     $userInfo = retrieveUser($_SESSION['user']);
+    $admin = isAdmin($_SESSION['user']);
     # retrieve user bids
-    $userBids = retrieveUserBids($_SESSION['user']);
+    if ($admin){
+      $userBids = retrieveAllUserBids($_SESSION['user']);
+    }
+    else{
+      $userBids = retrieveUserBids($_SESSION['user']);
+    }
+
+
+    if (isset($_POST['cate_button'])) {
+
+      if ($_POST['check_list'] == 'In Progress'){
+        if ($admin){
+          $userBids = retrieveAllUserPendingBids();
+        }
+        else{
+          $userBids = retrieveUserPendingBids($_SESSION['user']);
+        }
+      }
+      if ($_POST['check_list'] == 'Finished'){
+        if ($admin){
+          $userBids = retrieveAllUserCompletedBids();
+        }
+        else{
+          $userBids = retrieveUserCompletedBids($_SESSION['user']);
+        }
+      }
+    }
+
+
     $rows = mysqli_fetch_all($userBids,MYSQLI_ASSOC);
 
     if (isset($_POST['delete_bid'])) {
@@ -28,12 +70,11 @@
     	$result = updataBid($_POST['bid_point']);
     	if ($result == 0) {
     		$errmsg = 'Please try again. :(';
-    	} 
+    	}
     	else {
     		$successmsg ='Please click <a href="my_products.php">here</a> to refresh.';
     	}
     }
-}
 ?>
 
 
@@ -45,14 +86,22 @@
 			    	<div class="col-md-3 prdt-right">
 							<div class="w_sidebar">
 								<section  class="sky-form">
+                  <form method="POST">
 									<h1>All My Bids</h1>
 									<div class="row1 scroll-pane">
 										<div class="col col-4">
-											<label class="checkbox"><input type="checkbox" name="checkbox" checked=""><i></i>All</label>
+											<label class="checkbox"><input type="checkbox" name="check_list" value = "All"><i></i>All</label>
 										</div>
 										<div class="col col-4">
-											<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>In Progress</label>
-											<label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Finished</label>
+											<label class="checkbox"><input type="checkbox" name="check_list" value = "In Progress"><i></i>In Progress</label>
+											<label class="checkbox"><input type="checkbox" name="check_list" value = "Finished"><i></i>Finished</label>
+                      <script>
+												$('input[type="checkbox"]').on('change', function() {
+													$('input[type="checkbox"]').not(this).prop('checked', false);
+												});
+											</script>
+                      <button type="submit" class="btn btn-success btn-round" name="cate_button">Confirm</button>
+                    </form>
 										</div>
 									</div>
 								</section>
@@ -118,8 +167,8 @@
                 <div class="form-group">
                   <label class="col-sm-4 control-label">Status: </label>
                   <div class="col-sm-8 control-label">
-	                  <p> <?php if ($row['STATUS']==1){echo 'Available';} 
-	                             else {echo 'Not Available';};?> 
+	                  <p> <?php if ($row['STATUS']==1){echo 'Available';}
+	                             else {echo 'Not Available';};?>
 	                  </p>
                   </div>
                 </div>
@@ -142,7 +191,7 @@
                   <div class="col-sm-8 control-label">
 	                  <input name="bid_point" type="text" value="<?php echo $row['POINTS'];?>" />
                   </div>
-                </div> 
+                </div>
               </div>
 
               <div class="modal-footer">
@@ -176,7 +225,7 @@
 											<div class="col-sm-8 control-label">
 												<p> <?php echo $row['TITLE'];?> </p>
 											</div>
-										
+
 										</div>
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Product ID: </label>
@@ -212,7 +261,7 @@
 											<label class="col-sm-4 control-label">Product Description</label>
 											<div class="col-sm-8 control-label">
 												<p> <?php echo $row['DESCRIPTION'];?></p>
-											</div> 
+											</div>
 										</div>
 
 									<div class="modal-footer">
@@ -224,11 +273,11 @@
 						</div>
 					</div>
 					<?php } ;?>
-				</div>  
+				</div>
 
 
 <!--footer strat here-->
-	<?php
+	<?php  };
 # closes the <BODY> and include scripts
 	include('footer.php');
 	?>

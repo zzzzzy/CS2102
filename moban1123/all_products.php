@@ -1,16 +1,29 @@
 <?php
   # php logic file
 include('phpFunc.php');
+include('phpFunc2.php');
 
+# html <HEAD>, starts <BODY> and top menu of page
+include('header.php');
 # check if user is logged in
 if(!hasLogin()) {
-  $errmsg = '<a href="login.php">Login</a> to view the products.';
+  $errmsg = '<a href="login.php">Login</a> to view the products in auction.';?>
+  <div class="login">
+  	<div class="container">
+  		<div class="signin-main">
+  <div class="alert alert-info">
+  <?php echo $errmsg;?>
+  </div>
+</div>
+</div>
+</div>
+  <?php
 } else {
 
 
 
 
-}
+
 
 if (isset($_POST['bid_item'])) {
   $result = addBids($_POST['auction_id'], $_POST['item_id'], $_POST['bidding_points'], $_POST['daterange'],$_POST['bid_pickup_point']);
@@ -28,8 +41,13 @@ if (isset($_POST['check_list'])){
     $allProducts = getProductsFromCategories($_POST['check_list']);
   }
 }
-  # html <HEAD>, starts <BODY> and top menu of page
-include('header.php');
+
+if (isset($_POST['search_text'])){
+  if ($_POST['search_text'] != '') {
+    $allProducts = search($_POST['search_text']);
+  }
+}
+
 ?>
 
   <!-- start: content -->
@@ -68,6 +86,13 @@ include('header.php');
   						</div>
   			  </div>
           <!-- end: Product Categories -->
+          <div class="search">
+            <div class="search-text">
+                <form method="POST">
+                  <input class="serch" name = 'search_text' type="text" value="Search" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search';}"/>
+                </form>
+            </div>
+          </div>
     <div class="col-md-9 product-block">
 
     <?php
@@ -130,7 +155,7 @@ include('header.php');
                   <div class="form-group">
                     <label class="col-sm-4 control-label">Available Time</label>
                     <div class="col-sm-8 control-label">
-                      <p> <?php echo $row['START_TIME_AVAIL'];?> - <?php echo $row['START_TIME_AVAIL'];?> </p>
+                      <p> <?php echo $row['START_TIME_AVAIL'];?> - <?php echo $row['END_TIME_AVAIL'];?> </p>
                     </div>
                   </div>
                   <div class="form-group">
@@ -189,6 +214,8 @@ include('header.php');
 
 
       <?php
+    }
+
   # closes the <BODY> and include scripts
       include('footer.php');
       ?>

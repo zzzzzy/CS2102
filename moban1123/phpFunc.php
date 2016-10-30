@@ -81,7 +81,9 @@ function isAdmin($user){
 
 	$query = "SELECT ADMIN FROM USERS u WHERE u.user_id= '".$user."'";
 	$result = mysqli_query($mysqli, $query);
-	if ($result == TRUE){
+	$result_row = mysqli_fetch_all($result,MYSQLI_ASSOC)[0];
+	$result_admin = $result_row['ADMIN'];
+	if ($result_admin == TRUE){
 		return 1;
 	}
 	else{
@@ -91,7 +93,7 @@ function isAdmin($user){
 
 ################## My items ####################
 
-function addUser($user_name, $email, $phone, $password, $address) {
+function addUser($user_name, $email, $phone, $user_password, $address) {
 // User: Function to add new user
 
 	$host = "localhost";
@@ -104,10 +106,10 @@ function addUser($user_name, $email, $phone, $password, $address) {
 	$user_date_joined = date('Y-m-d H:i:s');
 	$points = 500;
 
-	$query = "INSERT INTO USERS (user_name, email, phone, password, points, address, date_joined) VALUES (?,?,?,?, $points,?, ('$user_date_joined'))";
+	$query = "INSERT INTO USERS (user_name, email, phone, password, points, address, date_joined, admin) VALUES (?,?,?,?, $points,?, ('$user_date_joined'),False)";
 
 	$stmt = $mysqli->prepare($query);
-	$stmt->bind_param("sssss", $user_name, $email, $phone, $password, $address);
+	$stmt->bind_param("sssss", $user_name, $email, $phone, $user_password, $address);
 	$stmt->execute();
 	$stmt->close();
 	$result = $mysqli->affected_rows;
@@ -592,8 +594,16 @@ function addBids($auction_id, $bid_product_id, $bid_points, $date_range, $bid_pi
 	$row = mysqli_fetch_array($initial_point,MYSQLI_ASSOC);
 	$initial_point = $row['POINTS'];
 
-	if ($initial_point >= $bid_points){
-		$query = "INSERT INTO BIDS (auctions, bidder_id, product_id, points, time_created, borrow_time, return_time, pickup) VALUES (?, $bidder_id, ?, ?, ('$bid_time_created'), ?, ?, ?)";
+	$query_2 = "SELECT * FROM AUCTIONS WHERE auction_id = '".$auction_id."'";
+	$result = mysqli_query($mysqli,$query_2);
+	$auctions_row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+	$auctions_start_avail_row = $auctions_row['START_TIME_AVAIL'];
+	$auctions_end_avail_row = $auctions_row['END_TIME_AVAIL'];
+	$auctions_min_price = $auctions_row['MIN_PRICE'];
+
+
+	if ($initial_point >= $bid_points && $start_time >= $auctions_start_avail_row && $end_time <= $auctions_end_avail_row && $bid_points >= $auctions_min_price){
+		$query = "INSERT INTO BIDS (auctions, bidder_id, product_id, points, time_created, borrow_time, return_time, pickup, status) VALUES (?, $bidder_id, ?, ?, ('$bid_time_created'), ?, ?, ?, 'Pending')";
 		$stmt = $mysqli->prepare($query);
 		$stmt->bind_param("iiisss", $auction_id, $bid_product_id, $bid_points, $start_time,$end_time,$bid_pickup);
 		$stmt->execute();
