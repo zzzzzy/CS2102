@@ -2,28 +2,15 @@
   # php logic file
 include('phpFunc.php');
 include('phpFunc2.php');
-
-# html <HEAD>, starts <BODY> and top menu of page
-include('header.php');
 # check if user is logged in
 if(!hasLogin()) {
-  $errmsg = '<a href="login.php">Login</a> to view the products in auction.';?>
-  <div class="login">
-  	<div class="container">
-  		<div class="signin-main">
-  <div class="alert alert-info">
-  <?php echo $errmsg;?>
-  </div>
-</div>
-</div>
-</div>
-  <?php
+  $errmsg = '<a href="login.php">Login</a> to view the products.';
 } else {
 
 
 
 
-
+}
 
 if (isset($_POST['bid_item'])) {
   $result = addBids($_POST['auction_id'], $_POST['item_id'], $_POST['bidding_points'], $_POST['daterange'],$_POST['bid_pickup_point']);
@@ -47,7 +34,8 @@ if (isset($_POST['search_text'])){
     $allProducts = search($_POST['search_text']);
   }
 }
-
+  # html <HEAD>, starts <BODY> and top menu of page
+include('header.php');
 ?>
 
   <!-- start: content -->
@@ -214,8 +202,6 @@ if (isset($_POST['search_text'])){
 
 
       <?php
-    }
-
   # closes the <BODY> and include scripts
       include('footer.php');
       ?>

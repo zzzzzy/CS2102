@@ -11,20 +11,7 @@ else{
 }
 
 include('header.php');
-# check if user is logged in
-if(!hasLogin()) {
-  $errmsg = '<a href="login.php">Login</a> to view your products.';?>
-  <div class="login">
-  	<div class="container">
-  		<div class="signin-main">
-  <div class="alert alert-info">
-  <?php echo $errmsg;?>
-  </div>
-</div>
-</div>
-</div>
-  <?php
-} else {
+
 if (isset($_POST['add_product'])){
 	$filename = $_FILES['item_pic']['name'];
 	$upload_directory = "uploads/";
@@ -181,7 +168,7 @@ if (isset($_POST['cate_button'])){
 												<div class="col-sm-8 control-label">
 													<select style='width:100px;' name="item_cate">
 														<?php
-														$cates = array('Tool', 'Appliance', 'Furniture', 'Book');
+														$cates = array('Stationery','Electronics','Vehicle','Luxury','Clothes','Furniture');
 														foreach ($cates as $cate) {
 															if ($row['CATE']==$cate) { ?>
 																<option selected value="<?php echo $cate;?>"><?php echo $cate;?></option>
@@ -322,11 +309,12 @@ if (isset($_POST['cate_button'])){
 							<label class="col-sm-4 control-label">Category</label>
 							<div class="col-sm-8 control-label">
 								<select style='width:100px;' name="item_cate">
-									<option value="Tool">Tool</option>
-									<option value="Appliance">Appliance</option>
+									<option value="Stationery">Stationery</option>
+									<option value="Electronics">Electronics</option>
+									<option value="Vehicle">Vehicle</option>
+									<option value="Luxury">Luxury</option>
+									<option value="Clothes">Clothes</option>
 									<option value="Furniture">Furniture</option>
-									<option value="Book">Book</option>
-
 								</select>
 							</div>
 						</div>
@@ -350,5 +338,5 @@ if (isset($_POST['cate_button'])){
 	<!--footer strat here-->
 	<?php
 # closes the <BODY> and include scripts
-	include('footer.php');}
+	include('footer.php');
 	?>

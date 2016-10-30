@@ -7,19 +7,9 @@
 
   # check if user is logged in
   if (!hasLogin()) {
-    $errmsg = '<a href="login.php">Login</a> to view your bids.';?>
-    <div class="login">
-      <div class="container">
-        <div class="signin-main">
-    <div class="alert alert-info">
-    <?php echo $errmsg;?>
-    </div>
-  </div>
-  </div>
-  </div>
-    <?php
+    $errmsg = '<a href="login.php">Login</a> to view your bids.';
   } else {
-
+  }
 
     # retrieve user info
     $userInfo = retrieveUser($_SESSION['user']);
@@ -277,7 +267,7 @@
 
 
 <!--footer strat here-->
-	<?php  };
+	<?php
 # closes the <BODY> and include scripts
 	include('footer.php');
 	?>
