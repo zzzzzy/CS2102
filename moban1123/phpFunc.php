@@ -519,18 +519,13 @@ function addBids($auction_id, $bid_product_id, $bid_points, $date_range, $bid_pi
 	$row = mysqli_fetch_array($initial_point,MYSQLI_ASSOC);
 	$initial_point = $row['POINTS'];
 
-<<<<<<< HEAD
 	$query = "SELECT * FROM AUCTIONS WHERE auction_id = '".$auction_id."'";
 	$auctions_row = mysqli_query($mysqli,$query);
 	$auctions_start_avail_row = $auctions_row['START_TIME_AVAIL'];
 	$auctions_end_avail_row = $auctions_row['END_TIME_AVAIL'];
 
 	if ($initial_point >= $bid_points && $start_time >= $auctions_start_avail_row && $end_time <= $auctions_end_avail_row){
-		$query = "INSERT INTO BIDS (auctions, bidder_id, product_id, points, time_created, borrow_time, return_time, pickup) VALUES (?, $bidder_id, ?, ?, ('$bid_time_created'), ?, ?, ?)";
-=======
-	if ($initial_point >= $bid_points){
 		$query = "INSERT INTO BIDS (auctions, bidder_id, product_id, points, time_created, borrow_time, return_time, pickup, status) VALUES (?, $bidder_id, ?, ?, ('$bid_time_created'), ?, ?, ?, 'Pending')";
->>>>>>> d174497f13e206d4beb9cc3ea2a9494a54e039d5
 		$stmt = $mysqli->prepare($query);
 		$stmt->bind_param("iiisss", $auction_id, $bid_product_id, $bid_points, $start_time,$end_time,$bid_pickup);
 		$stmt->execute();
