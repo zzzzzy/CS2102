@@ -520,7 +520,7 @@ function addBids($auction_id, $bid_product_id, $bid_points, $date_range, $bid_pi
 	$initial_point = $row['POINTS'];
 
 	if ($initial_point >= $bid_points){
-		$query = "INSERT INTO BIDS (auctions, bidder_id, product_id, points, time_created, borrow_time, return_time, pickup) VALUES (?, $bidder_id, ?, ?, ('$bid_time_created'), ?, ?, ?)";
+		$query = "INSERT INTO BIDS (auctions, bidder_id, product_id, points, time_created, borrow_time, return_time, pickup, status) VALUES (?, $bidder_id, ?, ?, ('$bid_time_created'), ?, ?, ?, 'Pending')";
 		$stmt = $mysqli->prepare($query);
 		$stmt->bind_param("iiisss", $auction_id, $bid_product_id, $bid_points, $start_time,$end_time,$bid_pickup);
 		$stmt->execute();
