@@ -619,6 +619,25 @@ function addBids($auction_id, $bid_product_id, $bid_points, $date_range, $bid_pi
 		return FALSE;
 	}
 }
+
+function ableToBid($auction_id){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$user = $_SESSION['user'];
+	$query = "SELECT * FROM BIDS WHERE auctions = ".$auction_id." AND bidder_id = ".$user." AND status='Pending'";
+	$result = mysqli_query($mysqli, $query);
+  if (mysqli_num_rows($result) == 0){
+		return True;
+	} else {
+		return False;
+	}
+}
+
 ################## All Products ####################
 
 function retrieveAvailProducts() {

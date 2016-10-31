@@ -116,7 +116,7 @@ if (!hasLogin()) {
               <div class="home-product-main">
                 <div class="home-product-top">
                   <button class="imagebtn" data-toggle="modal" data-target="#editBid_<?php echo $row['BID_ID'];?>">
-                    <img id = 'product-img' src="images/h6.jpg" alt="" class="img-responsive zoom-img">
+                    <img id = 'product-img' src="<?php echo $row['PIC'];?>" alt="" class="img-responsive zoom-img">
                   </button>
                 </div>
                 <div class="home-product-bottom">
