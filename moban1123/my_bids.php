@@ -26,7 +26,7 @@ if (!hasLogin()) {
   $admin = isAdmin($_SESSION['user']);
   # retrieve user bids
   if ($admin){
-    $userBids = retrieveAllUserBids($_SESSION['user']);
+    $userBids = retrieveAllUserBids();
   }
   else{
     $userBids = retrieveUserBids($_SESSION['user']);
@@ -34,23 +34,31 @@ if (!hasLogin()) {
 
 
   if (isset($_POST['cate_button'])) {
-
-    if ($_POST['check_list'] == 'In Progress'){
-      if ($admin){
-        $userBids = retrieveAllUserPendingBids();
-      }
-      else{
-        $userBids = retrieveUserPendingBids($_SESSION['user']);
+    if (isset($_POST['check_list'])) {
+      if ($_POST['check_list'] == 'In Progress'){
+        if ($admin){
+          $userBids = retrieveAllUserPendingBids();
+        }
+        else{
+          $userBids = retrieveUserPendingBids($_SESSION['user']);
+        }
+      } else if ($_POST['check_list'] == 'Finished'){
+        if ($admin){
+          $userBids = retrieveAllUserCompletedBids();
+        }
+        else{
+          $userBids = retrieveUserCompletedBids($_SESSION['user']);
+        }
+      } else if ($_POST['check_list'] == 'All') {
+        if ($admin){
+          $userBids = retrieveAllUserBids();
+        }
+        else{
+          $userBids = retrieveUserBids($_SESSION['user']);
+        }
       }
     }
-    if ($_POST['check_list'] == 'Finished'){
-      if ($admin){
-        $userBids = retrieveAllUserCompletedBids();
-      }
-      else{
-        $userBids = retrieveUserCompletedBids($_SESSION['user']);
-      }
-    }
+    
   }
 
 
