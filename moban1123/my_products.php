@@ -206,11 +206,13 @@ if (isset($_POST['cate_button'])){
 												</div>
 											</div>
 											<div class="form-group">
-												<label class="col-sm-4 control-label">Status</label>
-												<div class="col-sm-8 control-label">
-													<p><?php echo $row['IS_AVAILABLE'];?></p>
-												</div>
-											</div>
+                        						<label class="col-sm-4 control-label">Status: </label>
+                        							<div class="col-sm-8 control-label">
+                          							<p> <?php if ($row['IS_AVAILABLE']==1){echo 'Available';}
+                          								else {echo 'Not Available';};?>
+                        							</p>
+                      							</div>
+                   							</div>
 											<input type="hidden" name="item_id" id="item_id" value="<?php echo $row['PRODUCT_ID'];?>" />
 
 										</div>
