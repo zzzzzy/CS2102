@@ -161,9 +161,7 @@ if (!hasLogin()) {
                       <div class="form-group">
                         <label class="col-sm-4 control-label">Status: </label>
                         <div class="col-sm-8 control-label">
-                          <p> <?php if ($row['STATUS']==1){echo 'Available';}
-                          else {echo 'Not Available';};?>
-                        </p>
+                          <p> <?php echo $row['BID_STATUS'];?></p>
                       </div>
                     </div>
 
