@@ -29,7 +29,7 @@
     $userInfo = retrieveUser($_SESSION['user']);
     $admin = isAdmin($_SESSION['user']);
     # retrieve user items
-    
+
     if (isset($_POST['close_auction'])) {
       $result = closeAuction($_POST['auction_id']);
       if ($result == 0) {
@@ -68,7 +68,7 @@
         }
       }
       }
-      
+
     }
 
 ?>
@@ -370,7 +370,7 @@ function print_modal_all($row,$highestBid) {
                 <div class="form-group">
                   <label class="col-sm-4 control-label">Product Available: </label>
                   <div class="col-sm-8 control-label">
-                  <p> '.$row['START_TIME_AVAIL'].'to
+                  <p> '.$row['START_TIME_AVAIL'].' to
                   '. $row['END_TIME_AVAIL'].'</p>
                   </div>
                 </div>
