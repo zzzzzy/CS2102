@@ -29,7 +29,7 @@
     $userInfo = retrieveUser($_SESSION['user']);
     $admin = isAdmin($_SESSION['user']);
     # retrieve user items
-    
+
     if (isset($_POST['close_auction'])) {
       $result = closeAuction($_POST['auction_id']);
       if ($result == 0) {
@@ -68,7 +68,7 @@
         }
       }
       }
-      
+
     }
 
 ?>
@@ -119,8 +119,6 @@
                   <h3 style="color:white"><?php echo $row['TITLE'] ;?></h3>
                   <p>Auction ID: <?php echo $row['AUCTION_ID'] ;?></p>
                 </div>
-                <div class="srch">
-                  <span> Points: <?php echo $row['POINTS'];?></span>
                 </div>
               </div>
             </div>
