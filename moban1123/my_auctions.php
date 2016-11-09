@@ -40,29 +40,29 @@
     }
 
     if ($admin) {
-      $userItems = retrieveAllUserAuctions();
+      $userAuctions = retrieveAllUserAuctions();
     } else {
-      $userItems = retrieveAllAuctions($_SESSION["user"]);
+      $userAuctions = retrieveAllAuctions($_SESSION["user"]);
     }
     if (isset($_POST['cate_button'])){
       if (isset($_POST['check_list'])) {
         if ($admin) {
         if ($_POST['check_list'] == 'All') {
-          $userItems = retrieveAllUserAuctions();
+          $userAuctions = retrieveAllUserAuctions();
         } else if ($_POST['check_list'] == 'Open') {
-          $userItems = retrieveAllOpenAuctions();
+          $userAuctions = retrieveAllOpenAuctions();
         } else if ($_POST['check_list'] == 'Close') {
-          $userItems = retrieveAllClosedAuctions();
+          $userAuctions = retrieveAllClosedAuctions();
         } else {
           echo "Error!";
         }
       } else {
         if ($_POST['check_list'] == 'All') {
-          $userItems = retrieveAllAuctions($_SESSION["user"]);
+          $userAuctions = retrieveAllAuctions($_SESSION["user"]);
         } else if ($_POST['check_list'] == 'Open') {
-          $userItems = retrieveOpenAuctions($_SESSION["user"]);
+          $userAuctions = retrieveOpenAuctions($_SESSION["user"]);
         } else if ($_POST['check_list'] == 'Close') {
-          $userItems = retrieveClosedAuctions($_SESSION["user"]);
+          $userAuctions = retrieveClosedAuctions($_SESSION["user"]);
         } else {
           echo "Error!";
         }
@@ -107,25 +107,14 @@
       <div class="col-md-9 product-block">
         <!-- Tab panes -->
         <div class="tab-content">
-            <?php
-          $rows = mysqli_fetch_all($userItems, MYSQLI_ASSOC);
-          foreach ($rows as $row) {?>
-            <div class="col-md-4 home-grid">
-              <div class="home-product-main">
-                <div class="home-product-top">
-                  <button class="imagebtn" data-toggle="modal" data-target="#editProduct_<?php echo $row['PRODUCT_ID'];?>">
-                    <img id = 'product-img' src="<?php echo $row['PIC'];?>" alt="" class="img-responsive zoom-img" width="233px" height="233px">
-                  </button>
-                </div>
-                <div class="home-product-bottom">
-                  <h3 style="color:white"><?php echo $row['TITLE'] ;?></h3>
-                  <p><?php echo $row['CATE'] ;?></p>
-                </div>
-              </div>
-            </div>
+          <div class="tab-pane fade in active auction-content" style="padding-top:0px !important" id="A">
+                 <?php
+                   $rows = mysqli_fetch_all($userAuctions, MYSQLI_ASSOC);
+                   print_content_all($rows);?>
+        </div>
             <!-- start: modal for create new student -->
 
-            <div class="modal fade" id="editProduct_<?php echo $row['PRODUCT_ID']; ?>" role="dialog">
+            <!-- <div class="modal fade" id="editProduct_<?php echo $row['PRODUCT_ID']; ?>" role="dialog">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -192,15 +181,15 @@
                       if (ableToDelete($row['PRODUCT_ID'])) { ?>
                         <button type="submit" name="delete_product" class="btn btn-success btn-round">Delete</button>
                       <?php } ?>
-                      <?php
+                     <!--  <?php
                       if (!hasAuction($row['PRODUCT_ID'])) { ?>
                         <button type="button" name="create_auction" class="btn btn-success btn-round" data-dismiss="modal" data-toggle="modal" data-target="#addAuction_<?php echo $row['PRODUCT_ID'];?>">Create an Auction</button>
-                      <?php } ?>
+                      <?php } ?> -->
                     </div>
                   </form>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <div class="modal fade" id="addAuction_<?php echo $row['PRODUCT_ID']; ?>" role="dialog">
               <div class="modal-dialog">
@@ -251,16 +240,15 @@
             </div>
 
           <?php } ;?>
-          <div class="col-md-4 home-grid">
+          <!-- <div class="col-md-4 home-grid">
             <div class="home-product-main">
               <div class="home-product-top">
                 <button class="imagebtn" data-toggle="modal" data-target="#addProduct">
                   <img id = 'product-img' src="images/plus.png" alt="" class="img-responsive zoom-img">
                 </button>
               </div>
-
             </div>
-          </div>
+          </div> -->
           <div class="clearfix"> </div>
         </div>
   		</div>
@@ -271,7 +259,7 @@
 <!--product end here-->
 
 <?php
-};
+#};
 function print_content_all($rows) {
   foreach($rows as $row) {
     echo '
