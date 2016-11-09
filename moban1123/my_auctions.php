@@ -31,13 +31,14 @@
     # retrieve user items
 
     if (isset($_POST['close_auction'])) {
-      $result = closeAuction($_POST['auction_id']);
-
-      if ($result == 0) {
-        $errmsg = 'Please try again. :(';
-      } else {
-        $successmsg ='Please click <a href="my_auctions.php">here</a> to refresh.';
-      }
+      closeAuction($_POST['auction_id']);
+      // $result = closeAuction($_POST['auction_id']);
+      // print_r($result);
+      // if ($result == 0) {
+      //   $errmsg = 'Please try again. :(';
+      // } else {
+      //   $successmsg ='Please click <a href="my_auctions.php">here</a> to refresh.';
+      // }
     }
 
     if ($admin) {
@@ -187,7 +188,7 @@
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                
+
                 <?php if ($row['STATUS']==1){?>
                 <button type="submit" name="close_auction" class="btn btn-success btn-round">Close Auction</button>
                 <?php };?>
