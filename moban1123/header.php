@@ -47,6 +47,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				$('.scroll-pane').jScrollPane();
 			});
 		</script>
+
 <!-- //the jScrollPane script -->
 <script src="js/simpleCart.min.js"> </script>
 <script src="js/bootstrap.min.js"></script>
@@ -73,10 +74,24 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					    <!--/.navbar-header-->
 					 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					        <ul class="nav navbar-nav">
-					        	   <li><a href="all_products.php">All PRODUCTS</a></li>
-											 <li><a href="my_products.php">MY PRODUCTS</a></li>
-											 <li><a href="my_auctions.php">MY AUCTIONS</a></li>
-											 <li><a href="my_bids.php">MY BIDS</a></li>
+										<script type="text/javascript">
+											$(function(){
+												$("li").click(function(){
+													sessionStorage.setItem("selected",this.id);
+										    });
+											});
+
+											$(function(){
+												var id = sessionStorage.getItem("selected");
+												$('ul li').removeClass('active');
+												var list = document.getElementById(id);
+												list.className += "active";
+											})
+										</script>
+					        	   <li id='all products'><a href="all_products.php">ALL PRODUCTS</a></li>
+											 <li id='my products'><a href="my_products.php">MY PRODUCTS</a></li>
+											 <li id='my auctions'><a href="my_auctions.php">MY AUCTIONS</a></li>
+											 <li id='my bids'><a href="my_bids.php">MY BIDS</a></li>
 
 					        </ul>
 					    </div>
@@ -88,7 +103,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<div class="header-right">
 				<div class="search">
 					<div class="search-text">
-					    
+
 					</div>
 
 					<div class="head-signin">
