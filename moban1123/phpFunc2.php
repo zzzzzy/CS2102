@@ -22,7 +22,7 @@ function retrieveAllUserBids() {
 	$dbname = "cs2102";
 
 	$mysqli = new mysqli($host,$username,$password,$dbname);
-	$query =  "SELECT b.*, p.* , a.* FROM BIDS b, PRODUCTS p, AUCTIONS a WHERE b.product_id=p.product_id AND b.product_id=a.product_id AND b.auctions=a.auction_id";
+	$query =  "SELECT b.*, p.* , a.*, b.STATUS as BID_STATUS FROM BIDS b, PRODUCTS p, AUCTIONS a WHERE b.product_id=p.product_id AND b.product_id=a.product_id AND b.auctions=a.auction_id";
 	$result = mysqli_query($mysqli,$query);
 
 	return $result;
