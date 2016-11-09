@@ -470,6 +470,22 @@ function retrieveAllUserAuctions(){
 	return $result;
 }
 
+function auctionClosed($auction_id){
+	$host = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "cs2102";
+
+	$mysqli = new mysqli($host,$username,$password,$dbname);
+
+	$query =  "SELECT * FROM AUCTIONS a WHERE a.auction_id = ".$auction_id."";
+	$result = mysqli_query($mysqli,$query);
+	$row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+	$status = $row['STATUS'];
+
+	return $status;
+}
+
 ################## My Bids ####################
 
 function retrieveBid($bid_id) {
