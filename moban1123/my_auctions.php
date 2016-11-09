@@ -32,6 +32,7 @@
 
     if (isset($_POST['close_auction'])) {
       $result = closeAuction($_POST['auction_id']);
+
       if ($result == 0) {
         $errmsg = 'Please try again. :(';
       } else {
@@ -102,6 +103,7 @@
             </div>
           </div>
         </div>
+
         <div class="col-md-9 product-block">
 
           <?php
@@ -120,10 +122,11 @@
                   <p>Auction ID: <?php echo $row['AUCTION_ID'] ;?></p>
                 </div>
                 </div>
+                <!-- </div> -->
               </div>
-            </div>
 
-             <div class="modal fade" id="auction_all_<?php echo $row['AUCTION_ID'];?>" role="dialog">
+
+      <div class="modal fade" id="auction_all_<?php echo $row['AUCTION_ID'];?>" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -170,6 +173,7 @@
                         $highestBid = mysqli_fetch_array($highest, MYSQLI_ASSOC);
                         echo $highestBid['POINTS'];?></p>
                   </div>
+                  <input type="hidden" name="auction_id" value="<?php echo $row['AUCTION_ID'];?>" />
                 </div>
                 <div class="form-group">
                         <label class="col-sm-4 control-label">Status: </label>
@@ -183,7 +187,10 @@
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                
+                <?php if ($row['STATUS']==1){?>
                 <button type="submit" name="close_auction" class="btn btn-success btn-round">Close Auction</button>
+                <?php };?>
               </div>
             </form>
           </div>
