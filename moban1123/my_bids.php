@@ -58,7 +58,7 @@ if (!hasLogin()) {
         }
       }
     }
-    
+
   }
 
 
@@ -189,9 +189,12 @@ if (!hasLogin()) {
 
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                    <button type="submit" name="update_bid" class="btn btn-success btn-round">Update</button>
-                    <button type="submit" name="delete_bid" class="btn btn-success btn-round">Delete</button>
                     <button type="button" name="moreInfo" class="btn btn-success btn-round" data-dismiss="modal" data-toggle="modal" data-target="#more_info_<?php echo $row['BID_ID'];?>">More Product info</button>
+                    <?php
+                      if($row['BID_STATUS']!='Failure'){?>
+                        <button type="submit" name="update_bid" class="btn btn-success btn-round">Update</button>
+                        <button type="submit" name="delete_bid" class="btn btn-success btn-round">Delete</button>
+                    <?php } ?>
                   </div>
                 </form>
               </div>
